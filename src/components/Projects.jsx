@@ -1,80 +1,75 @@
 import React from 'react';
 
+const allProjects = [
+  {
+    name: 'Lumen-ra',
+    desc: 'A secure web application with custom authentication, dynamic user dashboards, and HCI-informed interaction patterns.',
+    tech: ['React', 'HCI', 'Auth Systems', 'Git'],
+  },
+  {
+    name: 'Freelancer Platform',
+    desc: 'A multi-step registration flow with a custom quiz component, functional timer, state handling, and real-time validation.',
+    tech: ['React', 'State Management', 'Validation'],
+  },
+  {
+    name: 'The Career Whisperer',
+    desc: 'A professional website with clear content structure, conversion-focused hierarchy, and smooth navigation.',
+    tech: ['HTML5', 'CSS3', 'JavaScript'],
+  },
+  {
+    name: 'Task Management App',
+    desc: 'A vanilla JavaScript app refactored into modular React architecture with state-based task tracking.',
+    tech: ['React', 'Refactoring', 'Modular Design'],
+  },
+];
+
 const Projects = () => {
-  const allProjects = [
-    {
-      name: "Lumen-ra",
-      desc: "Engineered a secure web application featuring a custom authentication system and dynamic user dashboards. Applied HCI and cognitive principles to ensure an accessible, human-centric user experience.",
-      tech: ["React", "HCI", "Auth Systems", "Git"]
-    },
-    {
-      name: "Freelancer Platform",
-      desc: "Developed a multi-step registration flow with a custom quiz component and functional timer. Optimized state management for complex user inputs and real-time validation.",
-      tech: ["React", "State Management", "Validation"]
-    },
-    {
-      name: "The Career Whisperer",
-      desc: "Designed and launched the official website ensuring a professional visual layout and clear site structure for optimal user retention and smooth navigation.",
-      tech: ["HTML5", "CSS3", "JavaScript"]
-    },
-    {
-      name: "Task Management App",
-      desc: "Refactored a vanilla JavaScript application into a modular React architecture. Implemented state-based tracking and completion status for high performance.",
-      tech: ["React", "Refactoring", "Modular Design"]
-    }
-  ];
-
   return (
-    <section id="projects" className="py-24 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
-        
-        {/* Header matching your Experience style */}
-        <div className="mb-16">
-          <h2 className="text-sm font-black uppercase tracking-[0.3em] text-emerald-600 mb-2">
-            Technical Work
+    <section id="projects">
+      <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div>
+          <p className="section-kicker">Technical work</p>
+          <h2 className="mt-4 text-4xl font-black text-[#181818] md:text-6xl">
+            Featured projects
           </h2>
-          <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tighter">
-            Featured <span className="text-emerald-500 italic">Projects.</span>
-          </h3>
-          <div className="h-1.5 w-20 bg-emerald-500 mt-6 rounded-full"></div>
         </div>
+        <a
+          href="https://github.com/Double-gg123"
+          target="_blank"
+          rel="noreferrer"
+          className="max-w-max rounded-full border border-[#181818] px-5 py-3 text-xs font-black uppercase tracking-[0.2em] transition hover:bg-[#181818] hover:text-white"
+        >
+          View GitHub
+        </a>
+      </div>
 
-        {/* Project Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {allProjects.map((project, index) => (
-            <div 
-              key={index} 
-              className="group bg-slate-50/50 p-8 rounded-[2rem] border border-slate-100 hover:bg-white hover:border-emerald-200 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500"
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex justify-between items-start mb-6">
-                  <h4 className="text-2xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                    {project.name}
-                  </h4>
-                  <span className="text-2xl text-emerald-500/30 group-hover:text-emerald-500 transition-colors">
-                    📂
-                  </span>
-                </div>
-                
-                <p className="text-slate-600 text-lg leading-relaxed mb-8 flex-grow">
-                  {project.desc}
-                </p>
-
-                {/* Tech Tags */}
-                <div className="flex flex-wrap gap-2 pt-6 border-t border-slate-200/50">
-                  {project.tech.map((tag, i) => (
-                    <span 
-                      key={i} 
-                      className="px-3 py-1 bg-white text-slate-500 text-[10px] font-black uppercase tracking-widest rounded-lg border border-slate-200 group-hover:border-emerald-200 group-hover:text-emerald-600 transition-colors"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
+      <div className="grid gap-5 md:grid-cols-2">
+        {allProjects.map((project, index) => (
+          <article
+            key={project.name}
+            className="group border border-[#181818]/10 bg-white p-7 transition hover:-translate-y-1 hover:border-[#181818] hover:shadow-[10px_10px_0_#d7f264] md:p-9"
+          >
+            <div className="mb-12 flex items-start justify-between gap-6">
+              <h3 className="text-3xl font-black leading-tight text-[#181818]">{project.name}</h3>
+              <span className="text-xs font-black uppercase tracking-[0.26em] text-[#938b7f]">
+                0{index + 1}
+              </span>
             </div>
-          ))}
-        </div>
+
+            <p className="min-h-[112px] text-lg leading-8 text-[#58534b]">{project.desc}</p>
+
+            <div className="mt-8 flex flex-wrap gap-2 border-t border-[#181818]/10 pt-6">
+              {project.tech.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-[#f7f4ee] px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#3c3933]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </article>
+        ))}
       </div>
     </section>
   );

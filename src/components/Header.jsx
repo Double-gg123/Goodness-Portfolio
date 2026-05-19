@@ -1,65 +1,92 @@
 import React from 'react';
 
+const contactItems = [
+  { label: 'Location', value: 'Thika, Kenya' },
+  { label: 'Phone', value: '+254 718 175283' },
+  { label: 'Email', value: 'gibendigoodness@gmail.com', href: 'mailto:gibendigoodness@gmail.com' },
+];
+
 const Header = () => {
   return (
-    <header className="bg-[#0f172a] text-white py-24 px-6 border-b-4 border-emerald-500 shadow-2xl">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-center gap-12">
-        
-        {/* Left Side: Branding & Bold Headline */}
-        <div className="text-center lg:text-left flex-1">
-          <div className="inline-block px-4 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6">
-            Systems Architect & Frontend Engineer
-          </div>
-          <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] mb-6">
-            GOODNESS <br />
-            <span className="text-emerald-400">GIBENDI</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-slate-400 font-light max-w-xl leading-relaxed">
-            Bridging complex software systems with 
-            <span className="text-white font-medium"> human psychology</span>. 
-            Designing interfaces that are as intuitive as they are powerful.
+    <header className="relative overflow-hidden bg-[#f7f4ee] text-[#181818]">
+      <div className="absolute inset-x-0 top-0 h-px bg-[#181818]/10" />
+
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-6 md:px-8">
+        <a href="#top" className="text-sm font-black uppercase tracking-[0.28em]">
+          GG
+        </a>
+        <div className="hidden items-center gap-8 text-[11px] font-black uppercase tracking-[0.24em] text-[#58534b] md:flex">
+          <a className="transition hover:text-[#181818]" href="#about">About</a>
+          <a className="transition hover:text-[#181818]" href="#skills">Skills</a>
+          <a className="transition hover:text-[#181818]" href="#experience">Experience</a>
+          <a className="transition hover:text-[#181818]" href="#projects">Projects</a>
+        </div>
+        <a
+          href="mailto:gibendigoodness@gmail.com?subject=Project Inquiry"
+          className="rounded-full bg-[#181818] px-5 py-3 text-[11px] font-black uppercase tracking-[0.2em] text-white transition hover:bg-[#2f7f62]"
+        >
+          Hire me
+        </a>
+      </nav>
+
+      <div id="top" className="mx-auto grid max-w-7xl items-center gap-12 px-5 pb-14 pt-10 md:px-8 md:pb-20 md:pt-16 lg:grid-cols-[1.25fr_0.75fr]">
+        <div>
+          <p className="mb-6 max-w-max border-y border-[#181818]/20 py-3 text-[11px] font-black uppercase tracking-[0.32em] text-[#2f7f62]">
+            Frontend engineer and systems architect
           </p>
+          <h1 className="max-w-5xl text-6xl font-black leading-[0.92] tracking-normal text-[#181818] md:text-8xl lg:text-9xl">
+            Goodness Gibendi
+          </h1>
+          <p className="mt-8 max-w-2xl text-xl leading-8 text-[#58534b] md:text-2xl md:leading-9">
+            I build responsive interfaces, workflow systems, and dashboards that make complex information feel calm, useful, and human.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <a
+              href="https://github.com/Double-gg123"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-[#181818] px-6 py-3 text-xs font-black uppercase tracking-[0.2em] transition hover:bg-[#181818] hover:text-white"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/goodness-gibendi/"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full bg-[#d7f264] px-6 py-3 text-xs font-black uppercase tracking-[0.2em] text-[#181818] transition hover:bg-[#c7e64b]"
+            >
+              LinkedIn
+            </a>
+          </div>
         </div>
-        
-        {/* Right Side: High-Contrast Contact Card */}
-        <div className="bg-slate-800/50 backdrop-blur-xl p-8 rounded-[2.5rem] border border-slate-700/50 shadow-2xl w-full md:w-[400px]">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-8">Direct Contact</h3>
-          
-          <ul className="space-y-6 text-sm md:text-base text-slate-300">
-            <li className="flex items-center gap-4 group">
-              <div className="p-3 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                <span className="text-emerald-400 group-hover:text-white">📍</span>
+
+        <aside className="border-t border-[#181818] pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+          <div className="mb-10">
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#7b756b]">
+              Availability
+            </p>
+            <p className="mt-3 text-3xl font-black leading-tight">
+              Open to frontend and automation projects.
+            </p>
+          </div>
+
+          <div className="space-y-5">
+            {contactItems.map((item) => (
+              <div key={item.label} className="grid grid-cols-[92px_1fr] gap-4 border-t border-[#181818]/10 pt-5">
+                <span className="text-[10px] font-black uppercase tracking-[0.24em] text-[#8a8378]">
+                  {item.label}
+                </span>
+                {item.href ? (
+                  <a className="font-semibold text-[#181818] hover:text-[#2f7f62]" href={item.href}>
+                    {item.value}
+                  </a>
+                ) : (
+                  <span className="font-semibold text-[#181818]">{item.value}</span>
+                )}
               </div>
-              <span className="font-medium">Thika, Kenya</span>
-            </li>
-            <li className="flex items-center gap-4 group">
-              <div className="p-3 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                <span className="text-emerald-400 group-hover:text-white">📞</span>
-              </div>
-              <span className="font-medium">+254 718 175283</span>
-            </li>
-            <li className="flex items-center gap-4 group">
-              <div className="p-3 bg-emerald-500/10 rounded-2xl group-hover:bg-emerald-500 group-hover:text-white transition-all">
-                <span className="text-emerald-400 group-hover:text-white">✉️</span>
-              </div>
-              <a href="mailto:gibendigoodness@gmail.com" className="hover:text-emerald-400 transition-colors font-medium">
-                gibendigoodness@gmail.com
-              </a>
-            </li>
-            
-            {/* Social Action Grid */}
-            <li className="flex gap-3 mt-8 pt-8 border-t border-slate-700/50">
-              <a href="https://github.com/Double-gg123" target="_blank" rel="noreferrer" 
-                 className="flex-1 text-center py-3 rounded-xl bg-slate-700 hover:bg-white hover:text-slate-900 font-black text-[10px] uppercase tracking-widest transition-all">
-                GitHub
-              </a>
-              <a href="https://www.linkedin.com/in/goodness-gibendi/" target="_blank" rel="noreferrer" 
-                 className="flex-1 text-center py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20">
-                LinkedIn
-              </a>
-            </li>
-          </ul>
-        </div>
+            ))}
+          </div>
+        </aside>
       </div>
     </header>
   );

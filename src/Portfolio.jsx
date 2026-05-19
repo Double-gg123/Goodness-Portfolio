@@ -6,82 +6,78 @@ import Experience from './components/Experience';
 import Projects from './components/Projects';
 
 const Portfolio = () => (
-  <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden relative">
-    
-    {/* Navigation & Hero */}
-    <Header /> 
+  <div className="min-h-screen overflow-x-hidden bg-[#f7f4ee] font-sans text-[#181818] selection:bg-[#d7f264] selection:text-[#181818]">
+    <Header />
 
-    <main className="relative">
-      {/* Narrative Section */}
-      <div className="max-w-7xl mx-auto py-24 px-6">
+    <main>
+      <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
         <About />
       </div>
 
-      {/* Skills Section - Soft Contrast */}
-      <div className="bg-slate-50/80 border-y border-slate-100 py-32">
-        <div className="max-w-7xl mx-auto px-6">
+      <div className="border-y border-[#181818]/10 bg-[#efebe2]">
+        <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
           <Skills />
         </div>
       </div>
-      
-      {/* Experience Section */}
-      <div className="max-w-7xl mx-auto py-32 px-6">
-        <Experience /> 
+
+      <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+        <Experience />
       </div>
 
-      {/* Projects Section */}
-      <div className="bg-white py-32 border-t border-slate-50">
-        <div className="max-w-7xl mx-auto px-6">
+      <div className="border-y border-[#181818]/10 bg-[#fdfbf6]">
+        <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
           <Projects />
         </div>
       </div>
 
-      {/* Education - Premium Refined Block */}
-      <section id="education" className="max-w-5xl mx-auto px-6 mb-40">
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition duration-1000"></div>
-          
-          <div className="relative bg-white border border-slate-100 rounded-[2.5rem] p-8 md:p-12 shadow-sm hover:shadow-xl hover:border-emerald-100/50 transition-all duration-500 overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 text-[120px] font-black text-slate-50 select-none pointer-events-none leading-none">25</div>
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-12">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="w-8 h-px bg-emerald-500/30"></span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-600">Academic Background</span>
-                </div>
-                <h3 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight">
-                  Bachelor of Arts in <span className="text-emerald-600">Psychology</span>
-                </h3>
-                <p className="text-lg text-slate-500 font-medium mt-2">Mount Kenya University • Dec 2025</p>
-                <div className="mt-8 flex gap-3">
-                  <span className="px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-widest rounded-md border border-emerald-100">Behavioral Science</span>
-                  <span className="px-3 py-1 bg-slate-50 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-md border border-slate-100">Cognitive Research</span>
-                </div>
-              </div>
-              <div className="w-full md:w-80 bg-slate-900 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-                <p className="text-emerald-400 text-[9px] font-black uppercase tracking-[0.3em] mb-4">Specialization</p>
-                <h4 className="text-white text-xl font-bold leading-tight mb-4">Human-Computer Interaction</h4>
-                <p className="text-slate-400 text-xs leading-relaxed">Applying cognitive load theories to architect superior digital systems and intuitive UI performance.</p>
-              </div>
+      <section id="education" className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+        <div className="grid gap-10 border border-[#181818] bg-[#181818] p-7 text-white md:grid-cols-[1.1fr_0.9fr] md:p-12">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-[#d7f264]">
+              Academic background
+            </p>
+            <h2 className="mt-6 max-w-3xl text-4xl font-black leading-tight md:text-6xl">
+              Bachelor of Arts in Psychology
+            </h2>
+            <p className="mt-5 text-lg font-semibold text-white/65">
+              Mount Kenya University / Dec 2025
+            </p>
+          </div>
+          <div className="border-t border-white/20 pt-8 md:border-l md:border-t-0 md:pl-10 md:pt-0">
+            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-white/45">
+              Specialization
+            </p>
+            <h3 className="mt-5 text-3xl font-black">Human-Computer Interaction</h3>
+            <p className="mt-5 leading-8 text-white/65">
+              Applying cognitive load theories to digital systems, interface decisions, and intuitive product workflows.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-2">
+              <span className="rounded-full bg-[#d7f264] px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#181818]">
+                Behavioral science
+              </span>
+              <span className="rounded-full border border-white/20 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white">
+                Cognitive research
+              </span>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    {/* Footer */}
-    <footer className="py-24 bg-[#010409] text-white border-t border-slate-900">
-      <div className="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
-        <div className="text-center md:text-left">
-          <h4 className="text-3xl font-black tracking-tighter"> GOODNESS <span className="text-emerald-500">GIBENDI</span></h4>
-          <p className="text-slate-500 text-[10px] font-bold tracking-[0.4em] uppercase mt-2">Systems Architect • Frontend Engineer</p>
+    <footer className="bg-[#181818] px-5 py-14 text-white md:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row md:items-end">
+        <div>
+          <h2 className="text-3xl font-black">Goodness Gibendi</h2>
+          <p className="mt-2 text-[11px] font-black uppercase tracking-[0.28em] text-white/40">
+            Systems architect / Frontend engineer
+          </p>
         </div>
-        <div className="flex flex-col items-center md:items-end gap-6">
-          <a href="mailto:gibendigoodness@gmail.com?subject=Project Inquiry" className="group text-xl font-bold tracking-tight text-white hover:text-emerald-400 transition-all">
-            Let's build something <span className="underline decoration-emerald-500/30 group-hover:decoration-emerald-400 underline-offset-8">together</span> →
-          </a>
-          <div className="text-slate-600 text-[9px] font-black tracking-[0.5em] uppercase">Thika, Kenya • 2026</div>
-        </div>
+        <a
+          href="mailto:gibendigoodness@gmail.com?subject=Project Inquiry"
+          className="text-2xl font-black text-[#d7f264] underline decoration-white/20 underline-offset-8 transition hover:text-white"
+        >
+          Let's build something together
+        </a>
       </div>
     </footer>
   </div>
