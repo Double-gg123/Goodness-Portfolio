@@ -2,9 +2,17 @@ import React from 'react';
 
 const experiences = [
   {
+    company: 'JOAT Kenya',
+    role: 'Software Engineer',
+    period: 'May 2026 - Present',
+    description: 'Building and maintaining software systems, improving product interfaces, and supporting engineering work for JOAT Kenya.',
+    tags: ['Software Engineering', 'Product Development', 'Frontend Systems'],
+    url: 'https://joatkenya.com/',
+  },
+  {
     company: 'The Career Whisperer',
     role: 'Systems and Integrations Architect',
-    period: 'Jan 2022 - Present',
+    period: 'Jan 2022 - Mar 2026',
     description: 'Leading the architectural design of AI-powered ecosystems, behavior-driven workflows, and practical automations that help teams move faster.',
     tags: ['AI Architect', 'Systems Design', 'Workflow Automation'],
   },
@@ -44,7 +52,18 @@ const Experience = () => {
           <article key={`${exp.company}-${exp.role}`} className="grid gap-6 py-9 lg:grid-cols-[0.75fr_1.5fr]">
             <div>
               <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#938b7f]">{exp.period}</p>
-              <p className="mt-3 text-lg font-black text-[#181818]">{exp.company}</p>
+              {exp.url ? (
+                <a
+                  href={exp.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-block text-lg font-black text-[#181818] underline decoration-[#d7f264] underline-offset-4 transition hover:text-[#2f7f62]"
+                >
+                  {exp.company}
+                </a>
+              ) : (
+                <p className="mt-3 text-lg font-black text-[#181818]">{exp.company}</p>
+              )}
             </div>
             <div>
               <h3 className="text-3xl font-black leading-tight text-[#181818]">{exp.role}</h3>
