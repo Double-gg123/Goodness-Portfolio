@@ -13,8 +13,15 @@ const allProjects = [
   },
   {
     name: 'The Career Whisperer',
-    desc: 'A professional website with clear content structure, conversion-focused hierarchy, and smooth navigation.',
-    tech: ['HTML5', 'CSS3', 'JavaScript'],
+    desc: 'Built the live career platform website with quiz-focused navigation, clear user journeys, and conversion-focused content structure.',
+    tech: ['Website Build', 'UX Structure', 'Conversion Flow'],
+    url: 'https://thecareerwhisperer.net/',
+  },
+  {
+    name: 'Amares Big Planet',
+    desc: 'Collaborated on the website build, helping shape a polished public-facing experience with clear layout and brand presentation.',
+    tech: ['Collaboration', 'Website Build', 'Responsive Layout'],
+    url: 'https://amaresbigplanet.com/',
   },
   {
     name: 'Task Management App',
@@ -67,6 +74,16 @@ const Projects = () => {
                   {tag}
                 </span>
               ))}
+              {project.url && (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-[#181818] px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white transition hover:bg-[#2f7f62]"
+                >
+                  Live site
+                </a>
+              )}
             </div>
           </article>
         ))}
