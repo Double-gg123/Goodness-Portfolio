@@ -5,6 +5,7 @@ const allProjects = [
     name: 'Lumen-ra',
     desc: 'A secure web application with custom authentication, dynamic user dashboards, and HCI-informed interaction patterns.',
     tech: ['React', 'HCI', 'Auth Systems', 'Git'],
+    url: 'https://lumen-ra.vercel.app/',
   },
   {
     name: 'Freelancer Platform',
