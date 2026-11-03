@@ -10,7 +10,7 @@ const contactItems = [
 
 const roles = ['React & Next.js apps', 'payment integrations', 'workflow automations', 'AI agents', 'human-centered interfaces'];
 
-const ticker = ['React', 'Next.js', 'TypeScript', 'Laravel', 'Node.js', 'M-Pesa Daraja', 'n8n', 'Docker', 'Shopify', 'AI Agents', 'WCAG', 'HCI'];
+const ticker = ['React', 'Next.js', 'TypeScript', 'Supabase', 'Laravel', 'Node.js', 'Claude API','M-Pesa Daraja', 'n8n', 'Docker', 'Shopify', 'AI Agents', 'WCAG', 'HCI'];
 
 const PauseIcon = ({ paused }) => (
   <svg viewBox="0 0 12 12" className="h-3 w-3" fill="currentColor" aria-hidden="true">

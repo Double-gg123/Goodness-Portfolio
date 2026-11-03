@@ -4,6 +4,15 @@ import { Reveal } from '../hooks';
 // Each project is a short case study: the problem, what I built, and the result.
 const allProjects = [
   {
+    name: 'Jamii Connect',
+    role: 'Growth hacker intern at Wakandi · Team of 10+',
+    category: ['web', 'ai', 'fintech'],
+    problem: 'Kenyan SACCOs and churches need to reach their members reliably, by SMS, email and WhatsApp, and in the language members read.',
+    built: 'Integrations for a production multi-tenant platform (Next.js, Supabase with row-level security): Onfon SMS with delivery reports and sign-in codes, M-Pesa top-ups, Brevo email, the WhatsApp Business API, and an English-to-Kiswahili translator on the Claude API with Zod-validated output and a safe fallback.',
+    result: 'In production. 190 commits in the first month, plus a referral programme, lifecycle emails, and the ChurchPay giving product, with unit tests running in GitHub Actions CI.',
+    stack: ['Next.js', 'Supabase', 'PostgreSQL', 'Claude API', 'Zod', 'M-Pesa Daraja', 'Brevo', 'WhatsApp API'],
+  },
+  {
     name: 'AI Job Application Automation',
     role: 'Sole developer',
     category: ['ai'],

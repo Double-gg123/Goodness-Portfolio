@@ -11,7 +11,7 @@ const services = [
   {
     title: 'Integrations & payments',
     summary: 'Back ends and APIs that connect your product to the services it depends on, including M-Pesa.',
-    points: ['M-Pesa Daraja (STK Push)', 'REST APIs, OAuth, JWT', 'Laravel / Node.js'],
+    points: ['M-Pesa Daraja (STK Push)', 'SMS, WhatsApp & email APIs', 'Supabase / Laravel / Node.js'],
   },
   {
     title: 'Automation & AI',

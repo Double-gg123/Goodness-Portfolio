@@ -2,6 +2,19 @@ import React from 'react';
 
 const experiences = [
   {
+    company: 'Wakandi',
+    role: 'Growth Hacker Intern',
+    period: 'Sep 2026 - Present',
+    current: true,
+    points: [
+      'Building integrations for Jamii Connect, a production multi-tenant SMS and member platform for Kenyan SACCOs and churches: Onfon SMS with delivery reports and sign-in codes, M-Pesa top-ups, Brevo email automation, and the WhatsApp Business API.',
+      'Built an English-to-Kiswahili message translator on the Anthropic Claude API, with Zod-validated output, placeholder checks, rate limiting, and a safe fallback to English.',
+      'Delivered growth features including a referral programme, lifecycle email automations, and the ChurchPay giving product; wrote unit tests for SMS, fraud, payment and loan-ledger logic, run in GitHub Actions CI.',
+      'Contributed 190 commits in the first month in a team of 10+.',
+    ],
+    tags: ['Next.js', 'Supabase', 'Claude API', 'M-Pesa Daraja'],
+  },
+  {
     company: 'JOAT Kenya',
     role: 'Software Engineer',
     period: 'May 2026 - Present',
