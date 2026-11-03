@@ -25,6 +25,15 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Goodness Gibendi | Portfolio</title>
+    <script>
+      // Apply the saved theme before React loads so dark mode doesn't flash light first.
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
