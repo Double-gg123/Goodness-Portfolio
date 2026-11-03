@@ -64,12 +64,16 @@ const Services = () => (
         </dl>
 
         <h3 className="mt-10 font-display text-xl font-bold text-ink">How we work</h3>
-        <ol className="mt-4 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+        <ol className="m-0 mt-4 list-none p-0">
           {steps.map(([title, text], i) => (
-            <li key={title} className="flex flex-col gap-2 bg-paper-alt p-5">
-              <span className="font-mono text-[13px] text-accent">Step {i + 1}</span>
-              <span className="font-semibold text-ink">{title}</span>
-              <span className="text-sm leading-relaxed text-body">{text}</span>
+            <li key={title} className="grid grid-cols-[2.5rem_1fr] gap-x-3 border-t border-line py-4">
+              <span className="font-display text-2xl font-extrabold leading-none text-accent" aria-hidden="true">
+                {i + 1}
+              </span>
+              <span>
+                <span className="block font-semibold text-ink">{title}</span>
+                <span className="mt-1 block leading-relaxed text-body">{text}</span>
+              </span>
             </li>
           ))}
         </ol>

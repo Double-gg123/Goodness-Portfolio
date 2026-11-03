@@ -97,7 +97,17 @@ const Portfolio = () => (
           Need an interface, and the systems behind it?
         </h2>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-          Open to remote frontend roles and freelance projects. Email or WhatsApp, whichever suits you.
+          Email or WhatsApp, whichever suits you. Hiring? I’m also on{' '}
+          <a
+            href="https://www.linkedin.com/in/goodness-gibendi/"
+            target="_blank"
+            rel="noreferrer"
+            className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+          >
+            LinkedIn
+            <NewTab />
+          </a>
+          .
         </p>
         <div className="mt-10 flex flex-wrap items-start gap-3">
           <a

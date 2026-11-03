@@ -4,12 +4,14 @@ import { ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
 
 // Case studies, strongest first. Live sites show a screenshot; private work shows how the system flows.
 // `outcome: false` labels the last row "Shipped" when there is no measured result yet.
+// `why` is the people-side reasoning behind the build (the psychology/HCI angle).
 const projects = [
   {
     name: 'Jamii Connect',
-    role: 'Growth hacker at Wakandi, in a team of 10+',
+    role: 'Growth Hacker (frontend & integrations) at Wakandi, in a team of 10+',
     problem: 'Kenyan SACCOs and churches need to reach their members reliably, by SMS, email and WhatsApp, in the language members read.',
     built: 'The integrations behind a production platform: SMS sign-in codes and delivery reports, M-Pesa top-ups, email and WhatsApp, plus an English-to-Kiswahili message translator built on the Claude API that falls back safely to English.',
+    why: 'Members already trust M-Pesa’s own payment prompt, so top-ups use STK Push instead of asking people to type in a paybill number. Messages go out in Kiswahili so members read them in their first language, and fall back to English rather than not arriving at all.',
     result: 'In production. 190 commits in my first month, plus a referral programme, lifecycle emails and the ChurchPay giving product, with unit tests running in CI.',
     stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M-Pesa Daraja · Onfon · Brevo',
     flow: {
@@ -30,6 +32,7 @@ const projects = [
     role: 'Lead developer and frontend administrator',
     problem: 'A career consulting platform needed to be found by more people and turn visitors into clients.',
     built: 'A fast, responsive React interface with technical SEO, metadata schemas and web security, plus n8n automations behind it.',
+    why: 'Job seekers arrive stressed and short on time, so the homepage leads with one clear next step, a free five-minute quiz, instead of a menu of services to choose from.',
     result: 'Organic traffic grew from about 500 to 2,000 visitors a month.',
     stack: 'React · Tailwind CSS · JavaScript · n8n',
     url: 'https://thecareerwhisperer.net/',
@@ -37,10 +40,24 @@ const projects = [
     shotH: 2377,
   },
   {
+    name: 'Briwnet Awards',
+    role: 'Software engineer at Briwnet (part-time)',
+    problem: 'An influencer awards event needed public voting that could handle nominees campaigning for votes.',
+    built: 'An awards platform where nominees run campaigns to gather votes in categories such as Influencer of the Year.',
+    why: 'Fans arrive from a nominee’s shared link, usually on a phone, so the path from that link to a cast vote is kept as short as possible.',
+    result: 'Public voting built for a target of about 10,000 votes.',
+    outcome: false,
+    stack: 'React · Next.js · PHP · Laravel · MySQL',
+    url: 'https://briwnetawards.com/',
+    shot: 'briwnet-awards.webp',
+    shotH: 2400,
+  },
+  {
     name: 'Digital Chama',
     role: 'Sole developer, prototype',
     problem: 'Group savings and loan groups (chamas) need shared accounts, loans and approvals that every member can trust.',
     built: 'A full-stack banking prototype with about 94 API endpoints: M-Pesa payments, account creation, ID verification, OCR, SMS, and real-time sanctions screening with timeouts and fallback.',
+    why: 'A chama runs on trust between members, so no single person can move money: every loan needs several signatories, and every action lands in an audit trail any member can check.',
     result: 'Role-based access, multi-signatory approvals, loan workflows, PDF reports and a full audit trail.',
     outcome: false,
     stack: 'Node.js · TypeScript · Express · React · SQLite · JWT',
@@ -60,6 +77,7 @@ const projects = [
     role: 'Sole developer',
     problem: 'Finding and applying for relevant jobs across dozens of boards is slow, repetitive work.',
     built: 'A system that gathers jobs from about 20 boards, scores each against a CV with an LLM, and tailors the CV and cover letter with an automatic honesty check. A person reviews every application in Telegram before anything is sent.',
+    why: 'Automation shouldn’t speak for someone unchecked, so nothing is sent without a person approving it, and the honesty check stops a tailored CV from claiming experience the candidate doesn’t have.',
     result: 'Runs the whole pipeline, from finding jobs to submitting reviewed applications, for two users. Built with AI coding agents (Claude Code).',
     stack: 'Node.js · TypeScript · PostgreSQL · Prisma · Docker · Playwright · Gemini API',
     flow: {
@@ -74,27 +92,11 @@ const projects = [
     },
   },
   {
-    name: 'Briwnet Awards',
-    role: 'Software engineer at Briwnet (part-time)',
-    problem: 'An influencer awards event needed public voting that could handle nominees campaigning for votes.',
-    built: 'An awards platform where nominees run campaigns to gather votes in categories such as Influencer of the Year.',
-    result: 'Public voting built for a target of about 10,000 votes.',
-    outcome: false,
-    stack: 'React · Next.js · PHP · Laravel · MySQL',
-    flow: {
-      label: 'A fan votes for a nominee',
-      steps: [
-        ['Nominee shares a campaign link', 'Next.js'],
-        ['Fan casts a public vote', 'Laravel'],
-        ['Tallied per category', 'MySQL'],
-      ],
-    },
-  },
-  {
     name: 'Amare’s Big Planet',
     role: 'Co-developer, frontend and accessibility',
     problem: 'An educational platform for young learners had to work for children and the adults guiding them.',
     built: 'Child-centered design with WCAG accessibility, semantic HTML5 and CSS Grid layouts.',
+    why: 'It is designed for two people at once: a child who explores by tapping big, bright choices, and the parent or teacher beside them who needs to find the right video quickly.',
     result: 'Growth driven through SEO and paid ad campaigns.',
     stack: 'React · Semantic HTML5 · CSS Grid · WCAG',
     url: 'https://amaresbigplanet.com/',
@@ -106,6 +108,7 @@ const projects = [
     role: 'Systems architect and core developer',
     problem: 'An educational platform had to keep confidential user data safe.',
     built: 'Modular interface features, API integrations and server-side authentication.',
+    why: 'People come to it around sensitive, personal experiences, so they need to trust that only the right people can see what they share.',
     result: 'Role-based authorization protects confidential user data.',
     outcome: false,
     stack: 'React · Vite · API integrations · Auth',
@@ -118,6 +121,7 @@ const projects = [
 const FEATURED = 4;
 
 // Measured results, shown once at the top of the work. Numbers count up the first time they appear.
+const RESULTS_SOURCE = { label: 'The Career Whisperer · 2022–26', href: '#case-the-career-whisperer' };
 const results = [
   { value: 4, suffix: '×', label: 'organic traffic for a consulting platform' },
   { value: 10, suffix: ' hrs', label: 'saved every week by automating 5 workflows' },
@@ -172,7 +176,7 @@ export const slug = (name) => `case-${name.toLowerCase().replace(/[^a-z0-9]+/g, 
 
 const STEP_MS = 420;
 
-/* Plays a flow diagram step by step: once when it first scrolls into view, and again on hover or Replay. */
+/* Plays a flow diagram step by step: once when it first scrolls into view, and again from the Replay button. */
 const useFlowPlayback = (stages) => {
   const ref = useRef(null);
   const timer = useRef(0);
@@ -216,9 +220,9 @@ const useFlowPlayback = (stages) => {
 const stateOf = (i, lit) => (i < lit ? 'done' : i === lit ? 'active' : 'pending');
 
 const stepClass = (state, hot) => {
-  const border = state === 'active' || hot ? 'border-accent' : 'border-line';
+  const border = state === 'active' || (hot && state === 'done') ? 'border-accent' : 'border-line';
   const glow = state === 'active' ? 'bg-accent/10 shadow-[0_0_0_4px_rgb(var(--accent)/0.18)]' : 'bg-paper';
-  const fade = state === 'pending' ? 'opacity-40' : 'opacity-100';
+  const fade = state === 'pending' ? 'opacity-80' : 'opacity-100';
   return `${border} ${glow} ${fade} transition-[opacity,background-color,box-shadow,border-color] duration-300 ease-out`;
 };
 
@@ -242,7 +246,7 @@ const Flow = ({ flow }) => {
   const branchOn = lit >= flow.steps.length;
 
   return (
-    <figure ref={ref} onMouseEnter={play} className="flex flex-col rounded-2xl border border-line bg-card p-5 md:p-6">
+    <figure ref={ref} className="flex flex-col rounded-2xl border border-line bg-card p-5 md:p-6">
       <div className="mb-4 flex items-center justify-between gap-4">
         <figcaption className="font-mono text-[13px] text-faint">{flow.label}</figcaption>
         <button
@@ -355,6 +359,7 @@ const CaseStudy = ({ project, headingRef }) => (
       <dl className="mt-0 lg:mt-6">
         <Row label="Problem">{project.problem}</Row>
         <Row label="What I built">{project.built}</Row>
+        {project.why && <Row label="Why it works">{project.why}</Row>}
         <Row label={project.outcome === false ? 'Shipped' : 'Result'}>
           <ResultText text={project.result} />
         </Row>
@@ -388,13 +393,41 @@ const Projects = () => {
   useEffect(() => {
     if (!userToggled.current) return;
     if (showAll) firstNewRef.current?.focus();
-    else toggleRef.current?.scrollIntoView({ block: 'center' });
+    else toggleRef.current?.scrollIntoView?.({ block: 'center' });
   }, [showAll]);
 
   const toggle = () => {
     userToggled.current = true;
     setShowAll((s) => !s);
   };
+
+  // Links elsewhere on the page (Experience, the hero tool cards) may point at a case study that is
+  // still collapsed. Open the list first, then scroll to it, so no link is ever dead.
+  const pendingId = useRef(null);
+  useEffect(() => {
+    const onClick = (e) => {
+      const link = e.target.closest?.('a[href^="#case-"]');
+      if (!link) return;
+      const id = link.getAttribute('href').slice(1);
+      if (document.getElementById(id)) return;
+      e.preventDefault();
+      userToggled.current = false;
+      pendingId.current = id;
+      setShowAll(true);
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
+  useEffect(() => {
+    if (!showAll || !pendingId.current) return;
+    const el = document.getElementById(pendingId.current);
+    pendingId.current = null;
+    if (!el) return;
+    el.scrollIntoView?.({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    el.querySelector('h3')?.focus({ preventScroll: true });
+    window.history.replaceState(null, '', `#${el.id}`);
+  }, [showAll]);
 
   return (
     <section id="work" aria-labelledby="work-title">
@@ -415,6 +448,12 @@ const Projects = () => {
           </div>
         ))}
       </dl>
+      <p className="mt-3 text-sm text-faint">
+        All four from{' '}
+        <a href={RESULTS_SOURCE.href} className="font-semibold text-muted underline decoration-line underline-offset-4 transition-colors hover:text-ink">
+          {RESULTS_SOURCE.label}
+        </a>
+      </p>
 
       <div id="case-studies" className="mt-12">
         {shown.map((project, i) => (

@@ -23,7 +23,7 @@ Direction A, "Systems diagram": a dark, technical page where the person is shown
 ## Type
 
 - Display and text: Bricolage Grotesque (variable, self-hosted via `@fontsource-variable`). Headings 700–800, tight tracking (-0.03em on the hero).
-- Data: IBM Plex Mono 400/500, only for dates, tech lists and diagram labels. Never as decoration.
+- Data: IBM Plex Mono 400 (one weight), only for dates, tech lists and diagram labels. Never as decoration.
 - No uppercase tracked kickers above headings, no section numbers.
 
 ## Components
@@ -38,8 +38,8 @@ Direction A, "Systems diagram": a dark, technical page where the person is shown
 
 ## Motion
 
-- The hero wiring draws in once on load. Tool labels around the portrait are buttons: hover, focus or tap lights their wire and opens a 'Used in' card linking to case studies.
-- Flow diagrams play step by step once when first seen, again on hover or via Replay (about 2 s, never loops).
+- The hero wiring draws in once on load. Tool labels around the portrait are buttons: hover, focus or tap lights their wire and fills the panel under the portrait with links to the case studies that use that tool (never covers her face; Escape closes it).
+- Flow diagrams play step by step once when first seen, and again only from Replay (about 2 s, never loops). Steps not yet reached sit at 80% opacity; accent marks the current step and completed signature steps.
 - The results strip counts up once. Live-site screenshots scroll through the page on hover or keyboard focus.
 - Cards and images use `<Reveal>` once; body text never animates. Nothing loops, so no pause control is needed.
 - Ease: `cubic-bezier(0.16, 1, 0.3, 1)`. Everything honours `prefers-reduced-motion`.

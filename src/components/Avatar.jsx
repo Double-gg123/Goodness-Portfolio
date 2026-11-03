@@ -12,7 +12,7 @@ const NODE_H = 50;
 // `used` lists the case studies on this page that use the tool (ids from Projects.jsx).
 const nodes = [
   { label: 'React', x: 0, y: 50, used: [['The Career Whisperer', 'case-the-career-whisperer'], ['Digital Chama', 'case-digital-chama']] },
-  { label: 'Next.js', x: 0, y: 208, used: [['Jamii Connect', 'case-jamii-connect']] },
+  { label: 'Next.js', x: 0, y: 208, used: [['Jamii Connect', 'case-jamii-connect'], ['Briwnet Awards', 'case-briwnet-awards']] },
   { label: 'M-Pesa', x: 0, y: 366, hot: true, used: [['Jamii Connect', 'case-jamii-connect'], ['Digital Chama', 'case-digital-chama']] },
   { label: 'SMS', x: VB_W - NODE_W, y: 50, used: [['Jamii Connect', 'case-jamii-connect'], ['Digital Chama', 'case-digital-chama']] },
   { label: 'Claude API', x: VB_W - NODE_W, y: 208, hot: true, used: [['Jamii Connect', 'case-jamii-connect']] },
@@ -35,11 +35,16 @@ const Avatar = () => {
   const [hover, setHover] = useState(null);
   const [pinned, setPinned] = useState(null);
   const active = hover ?? pinned;
+  const activeNode = nodes.find((n) => n.label === active);
 
-  // A pinned card closes on Escape or a click anywhere else.
+  // Escape closes the card however it was opened (hover, focus or click); a click elsewhere closes a pinned one.
   useEffect(() => {
-    if (!pinned) return undefined;
-    const onKey = (e) => e.key === 'Escape' && setPinned(null);
+    if (!active) return undefined;
+    const onKey = (e) => {
+      if (e.key !== 'Escape') return;
+      setPinned(null);
+      setHover(null);
+    };
     const onDown = (e) => !ref.current?.contains(e.target) && setPinned(null);
     window.addEventListener('keydown', onKey);
     window.addEventListener('pointerdown', onDown);
@@ -47,7 +52,7 @@ const Avatar = () => {
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('pointerdown', onDown);
     };
-  }, [pinned]);
+  }, [active]);
 
   // The portrait turns a few degrees toward the pointer (mouse and trackpad only).
   useEffect(() => {
@@ -77,7 +82,11 @@ const Avatar = () => {
   const pct = (v, total) => `${(v / total) * 100}%`;
 
   return (
-    <figure ref={ref} className="relative mx-auto w-full max-w-[330px] sm:max-w-[440px] lg:max-w-[580px]">
+    <figure
+      ref={ref}
+      onMouseLeave={() => setHover(null)}
+      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && setHover(null)}
+      className="relative mx-auto w-full max-w-[330px] sm:max-w-[440px] lg:max-w-[580px]">
       <div className="relative" style={{ aspectRatio: `${VB_W} / ${VB_H}` }}>
         {/* Hub ring and wires, behind the portrait */}
         <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -145,27 +154,22 @@ const Avatar = () => {
 
         {/* Tool nodes: hover, focus or tap to see the projects that use each tool */}
         {nodes.map((n, i) => {
-          const left = n.x < HUB.cx;
-          const below = n.y < HUB.cy + 60;
           const isActive = active === n.label;
-          const cardId = `tool-${n.label.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
           return (
             <div
               key={`n-${n.label}`}
-              className={`node absolute ${isActive ? 'z-20' : 'z-10'}`}
+              className="node absolute z-10"
               style={{ '--d': `${750 + i * 90}ms`, left: pct(n.x, VB_W), top: pct(n.y, VB_H), width: pct(NODE_W, VB_W), height: pct(NODE_H, VB_H) }}
-              onMouseEnter={() => setHover(n.label)}
-              onMouseLeave={() => setHover(null)}
             >
               <button
                 type="button"
                 aria-label={`${n.label}: show projects that use it`}
                 aria-expanded={isActive}
-                aria-controls={cardId}
+                aria-controls="tool-projects"
+                onMouseEnter={() => setHover(n.label)}
                 onClick={() => setPinned((p) => (p === n.label ? null : n.label))}
                 onFocus={() => setHover(n.label)}
-                onBlur={(e) => !e.currentTarget.parentElement.contains(e.relatedTarget) && setHover(null)}
-                className={`relative flex h-full w-full items-center justify-center whitespace-nowrap rounded-full border font-mono text-[12px] transition-colors duration-200 before:absolute before:-inset-y-2.5 before:inset-x-0 before:content-[''] sm:text-sm lg:text-[15px] ${
+                className={`relative flex h-full w-full items-center justify-center whitespace-nowrap rounded-full border font-mono text-[12px] transition-colors duration-200 before:absolute before:-inset-x-1.5 before:-inset-y-3 before:content-[''] sm:text-sm lg:text-[15px] ${
                   isActive
                     ? 'border-accent bg-accent text-on-accent'
                     : `bg-card ${n.hot ? 'border-accent text-accent' : 'border-faint text-ink'} hover:border-accent`
@@ -173,41 +177,44 @@ const Avatar = () => {
               >
                 {n.label}
               </button>
-              <div
-                id={cardId}
-                role="region"
-                aria-label={`Projects using ${n.label}`}
-                hidden={!isActive}
-                onBlur={(e) => !e.currentTarget.parentElement.contains(e.relatedTarget) && setHover(null)}
-                className={`absolute w-60 rounded-xl border border-line bg-card p-3 text-left shadow-[0_12px_32px_rgba(0,0,0,0.35)] ${
-                  left ? 'left-0' : 'right-0'
-                } ${below ? 'top-full mt-2' : 'bottom-full mb-2'}`}
-              >
-                <p className="m-0 px-2 pb-1 text-xs font-semibold text-faint">Used in</p>
-                <ul className="m-0 list-none p-0">
-                  {n.used.map(([name, id]) => (
-                    <li key={id}>
-                      <a
-                        href={`#${id}`}
-                        onClick={() => {
-                          setPinned(null);
-                          setHover(null);
-                        }}
-                        className="flex min-h-[44px] items-center justify-between gap-2 rounded-lg px-2 font-semibold text-ink transition-colors hover:bg-paper hover:text-accent"
-                      >
-                        {name}
-                        <ArrowRight className="h-4 w-4 shrink-0 text-accent" />
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           );
         })}
       </div>
+
+      {/* One panel under the portrait: a hint by default, or the projects for the selected tool. Never covers her face. */}
+      <div id="tool-projects" aria-live="polite" className="mx-auto mt-2 max-w-sm sm:min-h-[5.75rem]">
+        {activeNode ? (
+          <div className="rounded-xl border border-line bg-card p-3">
+            <p className="m-0 px-2 pb-1 text-xs font-semibold text-faint">Where I used {activeNode.label}</p>
+            <ul className="m-0 flex list-none flex-wrap gap-x-2 p-0">
+              {activeNode.used.map(([name, id]) => (
+                <li key={id}>
+                  <a
+                    href={`#${id}`}
+                    onClick={() => {
+                      setPinned(null);
+                      setHover(null);
+                    }}
+                    className="flex min-h-[44px] items-center gap-2 rounded-lg px-2 font-semibold text-ink transition-colors hover:bg-paper hover:text-accent"
+                  >
+                    {name}
+                    <ArrowRight className="h-4 w-4 shrink-0 text-accent" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p className="m-0 pt-2 text-center text-sm text-faint">
+            <span className="[@media(hover:hover)]:hidden">Tap</span>
+            <span className="hidden [@media(hover:hover)]:inline">Point at</span> a tool to see where I used it
+          </p>
+        )}
+      </div>
+
       <figcaption className="mt-1 text-center">
-        <span className="block font-display text-xl font-bold tracking-tight text-ink">Goodness Gibendi</span>
+        <span className="hidden font-display text-xl font-bold tracking-tight text-ink sm:block">Goodness Gibendi</span>
         <span className="mt-0.5 block text-sm text-faint">Frontend developer · Thika, Kenya</span>
         <span className="sr-only">Shown wired to the tools she connects: React, Next.js, M-Pesa, SMS, the Claude API and n8n.</span>
       </figcaption>

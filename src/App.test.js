@@ -13,8 +13,8 @@ test('case studies come first, with results and problem / build / outcome rows',
   const work = screen.getByRole('region', { name: /case studies/i });
   expect(within(work).getAllByText('4×').length).toBeGreaterThan(0);
   expect(within(work).getAllByText('Problem').length).toBe(4);
-  expect(within(work).getAllByText('Result').length).toBe(3);
-  expect(within(work).getAllByText('Shipped').length).toBe(1);
+  expect(within(work).getAllByText('Result').length).toBe(2);
+  expect(within(work).getAllByText('Shipped').length).toBe(2);
 });
 
 test('more projects are revealed on request', () => {
@@ -41,14 +41,31 @@ test('full stack list is hidden until asked for', () => {
   expect(document.getElementById('full-stack')).toBeVisible();
 });
 
-test('tool labels around the portrait open a list of projects that use them', () => {
+test('tool labels around the portrait show where each tool was used, and Escape closes it', () => {
   render(<App />);
   const mpesa = screen.getByRole('button', { name: /m-pesa: show projects/i });
   expect(mpesa).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(mpesa);
   expect(mpesa).toHaveAttribute('aria-expanded', 'true');
-  const card = screen.getByRole('region', { name: /projects using m-pesa/i });
-  expect(within(card).getByRole('link', { name: /digital chama/i })).toHaveAttribute('href', '#case-digital-chama');
+  const panel = document.getElementById('tool-projects');
+  expect(within(panel).getByRole('link', { name: /digital chama/i })).toHaveAttribute('href', '#case-digital-chama');
+  fireEvent.keyDown(window, { key: 'Escape' });
+  expect(mpesa).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('links to a collapsed case study open the list instead of going nowhere', () => {
+  render(<App />);
+  expect(document.getElementById('case-lumen-ra')).toBeNull();
+  const link = document.createElement('a');
+  link.href = '#case-lumen-ra';
+  document.body.appendChild(link);
+  fireEvent.click(link);
+  expect(document.getElementById('case-lumen-ra')).not.toBeNull();
+});
+
+test('each case study explains the people side of the build', () => {
+  render(<App />);
+  expect(screen.getAllByText('Why it works').length).toBe(4);
 });
 
 test('flow diagrams can be replayed', () => {

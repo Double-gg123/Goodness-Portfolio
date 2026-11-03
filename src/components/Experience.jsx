@@ -5,7 +5,7 @@ import { ArrowRight, NewTab } from './Icons';
 const experiences = [
   {
     company: 'Wakandi',
-    role: 'Growth Hacker',
+    role: 'Growth Hacker (frontend & integrations)',
     type: 'Full-time',
     period: 'Sep 2026 – Present',
     current: true,
@@ -32,7 +32,7 @@ const experiences = [
     period: 'Feb 2026 – Aug 2026',
     location: 'Juja, Kenya',
     points: [
-      'Built a second platform end to end as sole developer, with four user roles, a wallet ledger and M-Pesa STK Push payments.',
+      'Built a second client platform end to end as sole developer, with four user roles, a wallet ledger and M-Pesa STK Push payments.',
       'Shipped 36 controllers, 17 models and about 87 routes, covered by about 37 PHPUnit tests and deployed with Docker and nginx on Render.',
     ],
     caseStudy: { id: 'case-briwnet-awards', label: 'Briwnet Awards case study' },

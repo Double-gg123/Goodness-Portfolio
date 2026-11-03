@@ -4,16 +4,16 @@ import { ArrowRight } from './Icons';
 
 const Header = () => (
   <header id="top" className="relative">
-    <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-16 pt-8 md:px-8 md:pb-24 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+    <div className="mx-auto grid max-w-6xl items-center gap-6 px-5 pb-12 pt-4 md:gap-10 md:px-8 md:pb-16 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
       <div>
-        <h1 className="font-display text-[clamp(2.6rem,5.2vw,4.4rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
+        <h1 className="font-display text-[clamp(2.25rem,5.2vw,4.4rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
           I build the interface, and wire up the systems behind it.
         </h1>
-        <p className="mt-7 max-w-[34rem] text-xl leading-relaxed text-muted md:text-[1.375rem]">
+        <p className="mt-5 max-w-[34rem] text-lg leading-relaxed text-muted md:mt-7 md:text-[1.375rem]">
           Frontend developer working in React, Next.js and TypeScript. I connect web apps to the payments, messaging and AI they depend on, and a psychology degree keeps the people using them in view.
         </p>
 
-        <div className="mt-9 flex flex-wrap gap-3">
+        <div className="mt-7 flex flex-wrap gap-3 md:mt-9">
           <a
             href="#work"
             className="group inline-flex min-h-[52px] items-center gap-2 rounded-full bg-accent px-7 text-base font-semibold text-on-accent transition-transform duration-300 ease-out hover:-translate-y-0.5"
@@ -34,10 +34,6 @@ const Header = () => (
         </p>
 
         <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-faint">
-          <li className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />
-            Open to remote roles and freelance work
-          </li>
           <li>English · Kiswahili</li>
         </ul>
       </div>

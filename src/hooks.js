@@ -92,7 +92,7 @@ export const useScrollProgress = () => {
   return progress;
 };
 
-/* Dark by default (the site's home theme); a visitor's choice is saved in localStorage. */
+/* Dark by default (the site's home theme). Only a visitor's own choice is saved in localStorage. */
 export const useTheme = () => {
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'dark';
@@ -101,10 +101,14 @@ export const useTheme = () => {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
-    window.localStorage?.setItem('theme', theme);
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0d1117' : '#f6f7f9');
   }, [theme]);
 
-  const toggle = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+  const toggle = () =>
+    setTheme((t) => {
+      const next = t === 'dark' ? 'light' : 'dark';
+      window.localStorage?.setItem('theme', next);
+      return next;
+    });
   return [theme, toggle];
 };
