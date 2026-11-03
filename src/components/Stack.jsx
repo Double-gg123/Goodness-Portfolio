@@ -1,188 +1,83 @@
 import React, { useState } from 'react';
-import { Reveal } from '../hooks';
+import { MinusIcon, PlusIcon } from './Icons';
 
-// `icon` is a file in public/icons (from simpleicons.org). `brand` is the hover color;
-// it's left out for near-black brands so they stay readable in dark mode.
-const groups = [
-  {
-    id: 'frontend',
-    label: 'Frontend',
-    summary: 'Fast, accessible interfaces and component systems.',
-    tools: [
-      { name: 'React', icon: 'react', brand: '#61DAFB' },
-      { name: 'Next.js', icon: 'nextdotjs' },
-      { name: 'TypeScript', icon: 'typescript', brand: '#3178C6' },
-      { name: 'JavaScript', icon: 'javascript', brand: '#F7DF1E' },
-      { name: 'Redux', icon: 'redux', brand: '#764ABC' },
-      { name: 'Vite', icon: 'vite', brand: '#9135FF' },
-      { name: 'HTML5', icon: 'html5', brand: '#E34F26' },
-      { name: 'CSS3', icon: 'css', brand: '#663399' },
-      { name: 'Tailwind CSS', icon: 'tailwindcss', brand: '#06B6D4' },
-      { name: 'Alpine.js', icon: 'alpinedotjs', brand: '#8BC0D0' },
-    ],
-    also: ['Blade templates'],
-  },
-  {
-    id: 'backend',
-    label: 'Backend & APIs',
-    summary: 'Data models, payments, auth, and the APIs that connect them.',
-    tools: [
-      { name: 'PHP', icon: 'php', brand: '#777BB4' },
-      { name: 'Laravel', icon: 'laravel', brand: '#FF2D20' },
-      { name: 'Node.js', icon: 'nodedotjs', brand: '#5FA04E' },
-      { name: 'Express', icon: 'express' },
-      { name: 'MySQL', icon: 'mysql', brand: '#4479A1' },
-      { name: 'PostgreSQL', icon: 'postgresql', brand: '#4169E1' },
-      { name: 'SQLite', icon: 'sqlite' },
-      { name: 'Supabase', icon: 'supabase', brand: '#3FCF8E' },
-      { name: 'Prisma', icon: 'prisma' },
-      { name: 'Zod', icon: 'zod', brand: '#408AFF' },
-      { name: 'JWT', icon: 'jsonwebtokens' },
-      { name: 'WhatsApp API', icon: 'whatsapp', brand: '#25D366' },
-      { name: 'Brevo', icon: 'brevo', brand: '#0B996E' },
-    ],
-    also: ['REST APIs', 'OAuth', 'M-Pesa Daraja API', 'Onfon SMS API', 'Row-level security', 'PHPUnit'],
-  },
-  {
-    id: 'cms',
-    label: 'CMS & E-commerce',
-    summary: 'Stores, content platforms, and email that grows an audience.',
-    tools: [
-      { name: 'WordPress', icon: 'wordpress', brand: '#21759B' },
-      { name: 'Shopify', icon: 'shopify', brand: '#7AB55C' },
-      { name: 'Mailchimp', icon: 'mailchimp', brand: '#FFE01B' },
-    ],
-    also: ['Liquid themes', 'CMS administration', 'Email automation'],
-  },
-  {
-    id: 'devops',
-    label: 'DevOps & Automation',
-    summary: 'Shipping, deploying, and automating the boring parts.',
-    tools: [
-      { name: 'Git', icon: 'git', brand: '#F03C2E' },
-      { name: 'GitHub', icon: 'github' },
-      { name: 'Docker', icon: 'docker', brand: '#2496ED' },
-      { name: 'GitHub Actions', icon: 'githubactions', brand: '#2088FF' },
-      { name: 'nginx', icon: 'nginx', brand: '#009639' },
-      { name: 'Render', icon: 'render' },
-      { name: 'n8n', icon: 'n8n', brand: '#EA4B71' },
-    ],
-    also: ['CI/CD', 'Unit testing', 'Playwright'],
-  },
-  {
-    id: 'ai',
-    label: 'AI & Automation',
-    summary: 'LLM-powered agents, chatbots, and workflow automation.',
-    tools: [
-      { name: 'Claude', icon: 'claude', brand: '#D97757' },
-      { name: 'Anthropic API', icon: 'anthropic' },
-      { name: 'Gemini', icon: 'googlegemini', brand: '#8E75B2' },
-      { name: 'Make', icon: 'make', brand: '#6D00CC' },
-      { name: 'Telegram Bots', icon: 'telegram', brand: '#26A5E4' },
-    ],
-    also: ['OpenAI API', 'Claude Code', 'AI agents & chatbots', 'LLM integration', 'Prompt engineering'],
-  },
-  {
-    id: 'ux',
-    label: 'UX & Optimization',
-    summary: 'Research-led design, accessibility, and getting found.',
-    tools: [{ name: 'Figma', icon: 'figma', brand: '#F24E1E' }],
-    also: ['HCI', 'WCAG accessibility', 'Semantic SEO', 'Performance & edge caching', 'Paid ad campaigns'],
-  },
+// The tools used day to day. `icon` is a file in public/icons (simpleicons.org).
+const daily = [
+  { name: 'React', icon: 'react' },
+  { name: 'Next.js', icon: 'nextdotjs' },
+  { name: 'TypeScript', icon: 'typescript' },
+  { name: 'Tailwind CSS', icon: 'tailwindcss' },
+  { name: 'Supabase', icon: 'supabase' },
+  { name: 'Laravel', icon: 'laravel' },
+  { name: 'Node.js', icon: 'nodedotjs' },
+  { name: 'n8n', icon: 'n8n' },
+  { name: 'Claude', icon: 'claude' },
+  { name: 'Docker', icon: 'docker' },
 ];
 
-const total = groups.reduce((n, g) => n + g.tools.length + g.also.length, 0);
+// Everything else, by layer, behind a disclosure.
+const full = [
+  { label: 'Frontend', items: 'JavaScript (ES6+), Redux, Vite, HTML5, CSS3, Alpine.js, Blade' },
+  { label: 'Backend and data', items: 'PHP, Express, PostgreSQL, MySQL, SQLite, Prisma, Zod, REST APIs, OAuth, JWT, row-level security, PHPUnit' },
+  { label: 'Payments and messaging', items: 'M-Pesa Daraja (STK Push), Onfon SMS, WhatsApp Business API, Brevo, Mailchimp, Telegram Bot API' },
+  { label: 'AI and automation', items: 'Anthropic Claude API, OpenAI API, Gemini, Make, LLM integration, prompt engineering, Claude Code' },
+  { label: 'Shipping', items: 'Git, GitHub Actions (CI/CD), nginx, Render, Playwright, unit testing' },
+  { label: 'CMS and commerce', items: 'WordPress, Shopify (Liquid themes)' },
+  { label: 'UX', items: 'Figma prototyping, WCAG accessibility, user behavioural mapping, semantic SEO, performance diagnostics' },
+];
 
-/* Logo drawn as a mask so it takes the theme's text color, then its brand color on hover. */
-const Logo = ({ icon, brand }) => (
+/* Logo drawn as a mask so it takes the theme's text color. */
+const Logo = ({ icon }) => (
   <span
     aria-hidden="true"
-    className="block h-9 w-9 bg-ink transition-colors duration-300 group-hover:bg-[color:var(--brand)]"
+    className="block h-6 w-6 shrink-0 bg-ink"
     style={{
-      '--brand': brand || 'rgb(var(--ink))',
       WebkitMask: `url(${process.env.PUBLIC_URL}/icons/${icon}.svg) center / contain no-repeat`,
       mask: `url(${process.env.PUBLIC_URL}/icons/${icon}.svg) center / contain no-repeat`,
     }}
   />
 );
 
-const Group = ({ group }) => (
-  <div>
-    <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2 border-b border-ink/10 pb-3">
-      <h3 className="text-sm font-black uppercase tracking-[0.22em] text-accent">{group.label}</h3>
-      <p className="text-sm text-muted">{group.summary}</p>
-    </div>
-    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-      {group.tools.map((tool, i) => (
-        <Reveal key={tool.name} delay={i * 40}>
-          <div className="group flex aspect-square flex-col sm:aspect-[4/3] lg:aspect-[3/2] items-center justify-center gap-3 border border-ink/10 bg-card p-3 text-center transition duration-300 hover:-translate-y-1 hover:border-ink hover:shadow-[6px_6px_0_#d7f264]">
-            <Logo icon={tool.icon} brand={tool.brand} />
-            <span className="text-[10px] font-black uppercase tracking-[0.14em] text-chip md:text-[11px]">{tool.name}</span>
-          </div>
-        </Reveal>
-      ))}
-    </div>
-    {group.also.length > 0 && (
-      <div className="mt-4 flex flex-wrap gap-2">
-        {group.also.map((item) => (
-          <span
-            key={item}
-            className="rounded-full border border-ink/15 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-muted"
-          >
-            {item}
-          </span>
-        ))}
-      </div>
-    )}
-  </div>
-);
-
 const Stack = () => {
-  const [tab, setTab] = useState('all');
-  const shown = tab === 'all' ? groups : groups.filter((g) => g.id === tab);
-  const tabs = [{ id: 'all', label: 'All' }, ...groups];
+  const [open, setOpen] = useState(false);
 
   return (
-    <section id="stack">
-      <div className="mb-10 grid gap-6 lg:grid-cols-[0.9fr_1fr] lg:items-end">
-        <div>
-          <p className="section-kicker">Stack and technologies</p>
-          <h2 className="mt-4 text-4xl font-black leading-tight text-ink md:text-6xl">
-            What I build with.
-          </h2>
-        </div>
-        <p className="max-w-xl text-lg leading-8 text-muted lg:justify-self-end">
-          {Math.floor(total / 10) * 10}+ tools across the frontend, backend, automation, and AI layers, from first sketch in Figma to a Dockerized deploy.
-        </p>
+    <section id="stack" aria-labelledby="stack-title">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <h2 id="stack-title" className="font-display text-3xl font-extrabold tracking-tight text-ink md:text-4xl">
+          What I use every day
+        </h2>
       </div>
 
-      <div className="-mx-5 mb-12 overflow-x-auto px-5 md:mx-0 md:px-0">
-        <div className="flex w-max gap-2 md:w-auto md:flex-wrap" role="tablist" aria-label="Technology categories">
-          {tabs.map((t) => {
-            const selected = t.id === tab;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                role="tab"
-                aria-selected={selected}
-                onClick={() => setTab(t.id)}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] transition ${
-                  selected ? 'border-ink bg-ink text-paper' : 'border-ink/15 text-muted hover:border-ink hover:text-ink'
-                }`}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* key={tab} remounts the list so tiles animate in again when the tab changes */}
-      <div key={tab} className="space-y-14" role="tabpanel">
-        {shown.map((group) => (
-          <Group key={group.id} group={group} />
+      <ul className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3 lg:grid-cols-5">
+        {daily.map((tool) => (
+          <li key={tool.name} className="flex min-h-[64px] items-center gap-3 bg-paper px-5 py-4">
+            <Logo icon={tool.icon} />
+            <span className="font-medium text-ink">{tool.name}</span>
+          </li>
         ))}
+      </ul>
+
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls="full-stack"
+        className="mt-6 inline-flex min-h-[48px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
+      >
+        {open ? <MinusIcon className="h-4 w-4" /> : <PlusIcon className="h-4 w-4" />}
+        {open ? 'Hide the full stack' : 'Show the full stack'}
+      </button>
+
+      <div id="full-stack" hidden={!open}>
+        <dl className="mt-6">
+          {full.map((group) => (
+            <div key={group.label} className="grid gap-1 border-t border-line py-4 sm:grid-cols-[13rem_1fr] sm:gap-8">
+              <dt className="font-semibold text-ink">{group.label}</dt>
+              <dd className="m-0 leading-relaxed text-body">{group.items}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

@@ -1,116 +1,145 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Nav from './components/Nav';
 import Header from './components/Header';
-import About from './components/About';
-import Skills from './components/Skills';
-import Stack from './components/Stack';
-import Experience from './components/Experience';
 import Projects from './components/Projects';
+import Experience from './components/Experience';
+import Services from './components/Services';
+import Stack from './components/Stack';
+import About from './components/About';
+import { ArrowUp, ArrowUpRight, ChatIcon, CheckIcon, CopyIcon, MailIcon } from './components/Icons';
 import { useScrollProgress } from './hooks';
+
+const EMAIL = 'gibendigoodness@gmail.com';
 
 const BackToTop = () => {
   const progress = useScrollProgress();
-  const visible = progress > 0.15;
+  const visible = progress > 0.15 && progress < 0.95;
 
   return (
     <a
       href="#top"
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
-      className={`fixed bottom-6 right-6 z-40 grid h-12 w-12 place-items-center rounded-full bg-lime text-lg font-black text-night shadow-[4px_4px_0_#181818] transition duration-300 hover:-translate-y-1 ${
+      className={`fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full border border-line bg-card text-ink shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition duration-300 ease-out hover:-translate-y-1 ${
         visible ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >
-      ↑
+      <ArrowUp />
     </a>
   );
 };
 
+/* Copies the email, for visitors without a mail app set up. */
+const CopyEmail = () => {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
+    >
+      {copied ? <CheckIcon className="h-5 w-5 text-accent" /> : <CopyIcon className="h-5 w-5" />}
+      <span aria-live="polite">{copied ? 'Email copied' : 'Copy email'}</span>
+    </button>
+  );
+};
+
+const Section = ({ children, alt }) => (
+  <div className={alt ? 'border-y border-line bg-paper-alt' : ''}>
+    <div className="mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">{children}</div>
+  </div>
+);
+
 const Portfolio = () => (
-  <div className="min-h-screen overflow-x-clip bg-paper font-sans text-ink selection:bg-lime selection:text-night">
+  <div className="min-h-screen overflow-x-clip bg-paper font-sans text-ink">
+    <a
+      href="#work"
+      className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:font-semibold focus:text-on-accent"
+    >
+      Skip to case studies
+    </a>
     <Nav />
     <Header />
 
     <main>
-      <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-        <About />
-      </div>
-
-      <div className="border-y border-ink/10 bg-paper-alt">
-        <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-          <Skills />
-        </div>
-      </div>
-
-      <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
+      <Section alt>
+        <Projects />
+      </Section>
+      <Section>
+        <Experience />
+      </Section>
+      <Section alt>
+        <Services />
+      </Section>
+      <Section>
         <Stack />
-      </div>
+      </Section>
+      <Section alt>
+        <About />
+      </Section>
 
-      <div className="border-t border-ink/10">
-        <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-          <Experience />
-        </div>
-      </div>
-
-      <div className="border-y border-ink/10 bg-paper-soft">
-        <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-          <Projects />
-        </div>
-      </div>
-
-      <section id="education" className="mx-auto max-w-7xl px-5 py-24 md:px-8 md:py-32">
-        <div className="grid gap-10 border border-night bg-night p-7 text-white dark:border-white/10 md:grid-cols-[1.1fr_0.9fr] md:p-12">
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-lime">
-              Education
-            </p>
-            <h2 className="mt-6 max-w-3xl text-4xl font-black leading-tight md:text-6xl">
-              Bachelor of Arts in Psychology
-            </h2>
-            <p className="mt-5 text-lg font-semibold text-white/65">
-              Mount Kenya University / Dec 2025
-            </p>
-            <p className="mt-5 max-w-xl leading-8 text-white/65">
-              Focus on Human-Computer Interaction, user behavioral mapping, research methods, and accessibility.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-2">
-              <span className="rounded-full bg-lime px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-night">
-                HCI
-              </span>
-              <span className="rounded-full border border-white/20 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white">
-                Research methods
-              </span>
-            </div>
-          </div>
-          <div className="border-t border-white/20 pt-8 md:border-l md:border-t-0 md:pl-10 md:pt-0">
-            <p className="text-[11px] font-black uppercase tracking-[0.28em] text-white/45">
-              Fellowship
-            </p>
-            <h3 className="mt-5 text-3xl font-black">Women Techsters Fellowship</h3>
-            <p className="mt-3 font-semibold text-white/65">Tech4Dev / Aug 2025 - Oct 2026</p>
-            <p className="mt-5 leading-8 text-white/65">
-              Frontend Development track.
-            </p>
-          </div>
+      <section id="contact" aria-labelledby="contact-title" className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-32">
+        <h2 id="contact-title" className="max-w-4xl font-display text-[clamp(2.5rem,6vw,5rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
+          Need an interface, and the systems behind it?
+        </h2>
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+          Open to remote frontend roles and freelance projects. Email or WhatsApp, whichever suits you.
+        </p>
+        <div className="mt-10 flex flex-wrap gap-3">
+          <a
+            href={`mailto:${EMAIL}?subject=Hello%20Goodness`}
+            className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-accent px-6 font-semibold text-on-accent transition-transform duration-300 ease-out hover:-translate-y-0.5"
+          >
+            <MailIcon className="h-5 w-5" />
+            {EMAIL}
+          </a>
+          <CopyEmail />
+          <a
+            href="https://wa.me/254718175283"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
+          >
+            <ChatIcon className="h-5 w-5" />
+            WhatsApp
+          </a>
         </div>
       </section>
     </main>
 
-    <footer className="bg-night px-5 py-14 text-white md:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row md:items-end">
-        <div>
-          <h2 className="text-3xl font-black">Goodness Gibendi</h2>
-          <p className="mt-2 text-[11px] font-black uppercase tracking-[0.28em] text-white/40">
-            Systems & integrations architect / Frontend developer
-          </p>
-        </div>
-        <a
-          href="mailto:gibendigoodness@gmail.com?subject=Project Inquiry"
-          className="group text-2xl font-black text-lime underline decoration-white/20 underline-offset-8 transition hover:text-white"
-        >
-          Let's build something together
-          <span className="ml-2 inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-        </a>
+    <footer className="border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-col justify-between gap-6 px-5 py-10 md:flex-row md:items-center md:px-8">
+        <p className="m-0 text-muted">
+          <span className="font-semibold text-ink">Goodness Gibendi</span> · Frontend developer · Thika, Kenya
+        </p>
+        <ul className="m-0 flex flex-wrap gap-2 p-0">
+          {[
+            ['LinkedIn', 'https://www.linkedin.com/in/goodness-gibendi/'],
+            ['GitHub', 'https://github.com/Double-gg123'],
+          ].map(([label, href]) => (
+            <li key={label} className="list-none">
+              <a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-4 font-medium text-muted transition-colors hover:text-ink"
+              >
+                {label}
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </footer>
 

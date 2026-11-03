@@ -3,130 +3,98 @@ import React from 'react';
 const experiences = [
   {
     company: 'Wakandi',
-    role: 'Growth Hacker Intern',
-    period: 'Sep 2026 - Present',
+    role: 'Growth Hacker, building Jamii Connect',
+    period: 'Sep 2026 – Present',
     current: true,
     points: [
-      'Building integrations for Jamii Connect, a production multi-tenant SMS and member platform for Kenyan SACCOs and churches: Onfon SMS with delivery reports and sign-in codes, M-Pesa top-ups, Brevo email automation, and the WhatsApp Business API.',
-      'Built an English-to-Kiswahili message translator on the Anthropic Claude API, with Zod-validated output, placeholder checks, rate limiting, and a safe fallback to English.',
-      'Delivered growth features including a referral programme, lifecycle email automations, and the ChurchPay giving product; wrote unit tests for SMS, fraud, payment and loan-ledger logic, run in GitHub Actions CI.',
-      'Contributed 190 commits in the first month in a team of 10+.',
+      'Building integrations for a production multi-tenant SMS and member platform for Kenyan SACCOs and churches: Onfon SMS with delivery reports and sign-in codes, M-Pesa top-ups, Brevo email and the WhatsApp Business API.',
+      'Built an English-to-Kiswahili message translator on the Anthropic Claude API, with Zod-validated output, rate limiting and a safe fallback to English.',
+      'Wrote unit tests for SMS, fraud, payment and loan-ledger logic, run in GitHub Actions CI. 190 commits in my first month.',
     ],
-    tags: ['Next.js', 'Supabase', 'Claude API', 'M-Pesa Daraja'],
+    stack: 'Next.js · Supabase · Claude API · M-Pesa Daraja',
   },
   {
     company: 'JOAT Kenya',
     role: 'Software Engineer',
-    period: 'May 2026 - Present',
+    period: 'May 2026 – Present',
     current: true,
-    points: ['Building and maintaining software systems, improving product interfaces, and supporting engineering work.'],
-    tags: ['Software Engineering', 'Product Development', 'Frontend Systems'],
     url: 'https://joatkenya.com/',
+    points: ['Building and maintaining software systems, improving product interfaces, and supporting engineering work.'],
+    stack: 'Software engineering · Frontend systems',
   },
   {
     company: 'Briwnet',
-    location: 'Juja, Kenya',
     role: 'Software Engineer',
-    period: 'Feb 2026 - Aug 2026',
+    period: 'Feb 2026 – Aug 2026',
+    location: 'Juja, Kenya',
     points: [
       'Built Briwnet Awards, an influencer awards platform with public voting designed for a target of about 10,000 votes.',
-      'Built a second platform end to end as sole developer in Laravel, Blade, Tailwind and Alpine.js, with four user roles, a wallet ledger, and M-Pesa STK Push payments (with a simulation mode for testing).',
+      'Built a second platform end to end as sole developer in Laravel, Blade, Tailwind and Alpine.js, with four user roles, a wallet ledger and M-Pesa STK Push payments.',
       'Shipped 36 controllers, 17 models and about 87 routes, covered by about 37 PHPUnit tests and deployed with Docker and nginx on Render.',
     ],
-    tags: ['Laravel', 'M-Pesa Daraja', 'React / Next.js', 'Docker'],
+    stack: 'Laravel · Next.js · MySQL · Docker',
   },
   {
     company: 'The Career Whisperer',
-    location: 'Remote',
     role: 'Frontend & Systems Developer',
-    period: 'Jan 2022 - Present',
-    current: true,
-    points: [
-      'Grew organic traffic from about 500 to 2,000 visitors a month with semantic HTML, metadata schemas, and technical SEO.',
-      'Automated 5 business workflows with n8n and custom API webhooks, saving about 10 hours a week.',
-      'Built responsive web apps in React, Vite and Tailwind CSS, and acted as technical liaison for non-technical leadership.',
-    ],
-    tags: ['React', 'n8n', 'Technical SEO'],
-    url: 'https://thecareerwhisperer.net/',
-  },
-  {
-    company: 'The Career Whisperer',
+    period: 'Jan 2022 – Jan 2026',
     location: 'Remote',
-    role: 'Technical Support & E-Commerce Architect',
-    period: 'Jan 2024 - Jan 2025',
+    url: 'https://thecareerwhisperer.net/',
     points: [
-      'Built and optimized the Shopify store (Liquid themes, site migration, custom checkout flows), reaching about 200 orders a month.',
-      'Grew the Mailchimp list to about 10,000 subscribers with automated, segmented email campaigns.',
-      'Shipped data-collection hotfixes and isolated tracking bugs during high-traffic launch windows.',
+      'Grew organic traffic from about 500 to 2,000 visitors a month with semantic HTML, metadata schemas and technical SEO.',
+      'Automated 5 business workflows with n8n and custom API webhooks, saving about 10 hours a week.',
+      'Earlier (2024), built the Shopify store to about 200 orders a month and grew the Mailchimp list to about 10,000 subscribers.',
     ],
-    tags: ['Shopify', 'Mailchimp', 'E-commerce'],
+    stack: 'React · Vite · Tailwind · n8n · Shopify',
   },
 ];
 
-const Experience = () => {
-  return (
-    <section id="experience">
-      <div className="mb-16 grid gap-6 lg:grid-cols-[0.85fr_1fr] lg:items-end">
-        <div>
-          <p className="section-kicker">Career journey</p>
-          <h2 className="mt-4 text-4xl font-black leading-tight text-ink md:text-6xl">
-            Experience that connects systems and people.
-          </h2>
-        </div>
-        <p className="max-w-xl text-lg leading-8 text-muted lg:justify-self-end">
-          From interface work to payments and automation, the common thread is making digital systems easier to understand and easier to use.
-        </p>
-      </div>
+const Experience = () => (
+  <section id="experience" aria-labelledby="experience-title">
+    <h2 id="experience-title" className="font-display text-4xl font-extrabold tracking-tight text-ink md:text-6xl">
+      Experience
+    </h2>
 
-      <div className="divide-y divide-ink/10 border-y border-ink/10">
-        {experiences.map((exp) => (
-          <article key={`${exp.company}-${exp.role}`} className="group relative grid gap-6 py-9 lg:grid-cols-[0.75fr_1.5fr]">
-            <span
-              className="absolute left-0 top-0 h-[3px] w-full origin-left scale-x-0 bg-lime transition-transform duration-500 group-hover:scale-x-100"
-              aria-hidden="true"
-            />
-            <div>
-              <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.24em] text-faint">
-                {exp.current && <span className="h-2 w-2 rounded-full bg-accent" title="Current role" />}
-                {exp.period}
-              </p>
+    <ol className="mt-12">
+      {experiences.map((exp) => (
+        <li key={`${exp.company}-${exp.role}`} className="grid gap-4 border-t border-line py-10 md:grid-cols-[14rem_1fr] md:gap-10">
+          <div className="font-mono text-[13px] leading-relaxed text-faint">
+            <p className="m-0 flex items-center gap-2">
+              {exp.current && <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />}
+              {exp.period}
+            </p>
+            {exp.location && <p className="m-0">{exp.location}</p>}
+          </div>
+          <div>
+            <h3 className="font-display text-2xl font-bold tracking-tight text-ink md:text-[1.75rem]">
               {exp.url ? (
                 <a
                   href={exp.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-3 inline-block text-lg font-black text-ink underline decoration-lime underline-offset-4 transition hover:text-accent"
+                  className="inline-flex min-h-[44px] items-center underline decoration-line decoration-2 underline-offset-[6px] transition-colors hover:decoration-accent"
                 >
                   {exp.company}
                 </a>
               ) : (
-                <p className="mt-3 text-lg font-black text-ink">{exp.company}</p>
+                exp.company
               )}
-              {exp.location && <p className="mt-1 text-sm text-faint">{exp.location}</p>}
-            </div>
-            <div>
-              <h3 className="text-3xl font-black leading-tight text-ink">{exp.role}</h3>
-              <ul className="mt-5 max-w-3xl space-y-3">
-                {exp.points.map((point) => (
-                  <li key={point} className="flex gap-3 text-lg leading-8 text-muted">
-                    <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-7 flex flex-wrap gap-2">
-                {exp.tags.map((tag) => (
-                  <span key={tag} className="rounded-full bg-lime px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-night">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-};
+            </h3>
+            <p className="mt-1 text-muted">{exp.role}</p>
+            <ul className="mt-5 max-w-[68ch] space-y-3">
+              {exp.points.map((point) => (
+                <li key={point} className="flex gap-3 leading-relaxed text-body">
+                  <span className="mt-[0.7em] h-1 w-1 shrink-0 rounded-full bg-faint" aria-hidden="true" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 font-mono text-[13px] text-faint">{exp.stack}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+);
 
 export default Experience;

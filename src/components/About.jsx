@@ -1,91 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Reveal } from '../hooks';
+import React from 'react';
 
-const stats = [
-  { value: 4, suffix: 'x', label: 'Organic traffic growth for a consulting platform' },
-  { value: 10, suffix: 'k', label: 'Email subscribers grown with Mailchimp automation' },
-  { value: 10, suffix: ' hrs', label: 'Saved each week by automating 5 workflows' },
+const results = [
+  ['4×', 'organic traffic for a consulting platform (about 500 to 2,000 visitors a month)'],
+  ['10,000', 'email subscribers, grown with segmented Mailchimp automation'],
+  ['10 hours', 'saved each week by automating five business workflows with n8n'],
+  ['~200', 'Shopify orders a month after rebuilding the store and checkout'],
 ];
 
-/* Counts up from 0 once, the first time the number scrolls into view. */
-const CountUp = ({ value, suffix }) => {
-  const ref = useRef(null);
-  const [n, setN] = useState(value);
+const education = [
+  ['Bachelor of Arts in Psychology', 'Mount Kenya University · Dec 2025', 'Focus on Human-Computer Interaction, user behavioural mapping, research methods and accessibility.'],
+  ['Women Techsters Fellowship', 'Tech4Dev · Aug 2025 – Oct 2026', 'Frontend Development track.'],
+];
 
-  useEffect(() => {
-    const node = ref.current;
-    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (!node || typeof IntersectionObserver === 'undefined' || reduced) return undefined;
-
-    setN(0);
-    let frame = 0;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      observer.disconnect();
-      const start = performance.now();
-      const tick = (now) => {
-        const t = Math.min((now - start) / 1000, 1);
-        setN(Math.round(value * (1 - (1 - t) ** 3)));
-        if (t < 1) frame = requestAnimationFrame(tick);
-      };
-      frame = requestAnimationFrame(tick);
-    }, { threshold: 0.5 });
-    observer.observe(node);
-    return () => {
-      observer.disconnect();
-      cancelAnimationFrame(frame);
-    };
-  }, [value]);
-
-  return (
-    <span ref={ref}>
-      {n}
-      {suffix}
-    </span>
-  );
-};
-
-const About = () => {
-  return (
-    <section id="about" className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-      <div>
-        <p className="section-kicker">Professional profile</p>
-        <h2 className="mt-4 text-4xl font-black leading-tight tracking-normal text-ink md:text-6xl">
-          Engineering shaped by human insight.
-        </h2>
-      </div>
-
-      <div className="space-y-8">
-        <p className="text-2xl font-semibold leading-10 text-body">
-          I'm a frontend developer and systems architect. I've delivered frontend migrations, built payment and banking integrations, automated business workflows, and grown traffic and sales for consulting platforms and impact-driven brands.
+const About = () => (
+  <section id="about" aria-labelledby="about-title" className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+    <div>
+      <h2 id="about-title" className="font-display text-4xl font-extrabold tracking-tight text-ink md:text-6xl">
+        Psychology first, then code.
+      </h2>
+      <div className="mt-7 max-w-[60ch] space-y-5 text-lg leading-relaxed text-body">
+        <p>
+          I studied psychology, with a focus on how people use technology, alongside building for the web. It shapes how I build: fewer steps, clearer choices, and interfaces that still make sense to someone in a hurry on a small phone.
         </p>
-        <div className="grid gap-5 md:grid-cols-2">
-          <div className="border-t border-ink pt-5">
-            <h3 className="text-sm font-black uppercase tracking-[0.22em] text-accent">Code</h3>
-            <p className="mt-3 leading-7 text-muted">
-              React, Next.js, TypeScript and Laravel on the build side; REST APIs, M-Pesa, OAuth and n8n to connect it all; Docker and nginx to ship it.
-            </p>
-          </div>
-          <div className="border-t border-ink pt-5">
-            <h3 className="text-sm font-black uppercase tracking-[0.22em] text-accent">Cognition</h3>
-            <p className="mt-3 leading-7 text-muted">
-              A psychology degree focused on HCI and behavioral mapping shapes how I simplify flows, reduce cognitive load, and design for accessibility.
-            </p>
-          </div>
-        </div>
-        <div className="grid gap-5 pt-4 sm:grid-cols-3">
-          {stats.map((stat, i) => (
-            <Reveal key={stat.label} delay={i * 80} className="border-t border-ink/10 pt-5">
-              <p className="text-5xl font-black text-ink md:text-6xl">
-                <CountUp value={stat.value} suffix={stat.suffix} />
-              </p>
-              <p className="mt-2 text-xs font-bold leading-5 text-faint">{stat.label}</p>
-            </Reveal>
-          ))}
-        </div>
+        <p>
+          Since 2022 I have built frontends, payment and messaging integrations, and automations for consulting platforms, impact-driven brands and Kenyan member organisations.
+        </p>
       </div>
-    </section>
-  );
-};
+
+      <h3 className="mt-12 font-display text-xl font-bold text-ink">Education</h3>
+      <ul className="mt-4">
+        {education.map(([title, meta, note]) => (
+          <li key={title} className="border-t border-line py-5">
+            <p className="m-0 font-semibold text-ink">{title}</p>
+            <p className="m-0 mt-1 font-mono text-[13px] text-faint">{meta}</p>
+            <p className="m-0 mt-2 leading-relaxed text-body">{note}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div>
+      <h3 className="font-display text-xl font-bold text-ink">Results so far</h3>
+      <dl className="mt-4">
+        {results.map(([value, label]) => (
+          <div key={value} className="grid grid-cols-[7.5rem_1fr] items-baseline gap-6 border-t border-line py-5">
+            <dt className="font-display text-3xl font-extrabold tracking-tight text-accent">{value}</dt>
+            <dd className="m-0 leading-relaxed text-body">{label}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+);
 
 export default About;

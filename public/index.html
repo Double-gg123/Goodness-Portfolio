@@ -1,52 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#0d1117" />
+    <title>Goodness Gibendi · Frontend developer</title>
     <meta
       name="description"
-      content="Goodness Gibendi portfolio: frontend engineering, systems architecture, UX psychology, and automation work."
+      content="Goodness Gibendi builds React and Next.js interfaces and wires up the payments, messaging and AI behind them. Based in Thika, Kenya; open to remote roles and freelance work."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Goodness Gibendi | Portfolio</title>
+    <!-- Link previews (LinkedIn, WhatsApp, Slack, X) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://goodness-portfolio.vercel.app/" />
+    <meta property="og:title" content="Goodness Gibendi · Frontend developer" />
+    <meta
+      property="og:description"
+      content="React and Next.js interfaces, wired to M-Pesa, SMS, WhatsApp and AI. Case studies from Jamii Connect, Digital Chama and more."
+    />
+    <meta property="og:image" content="https://goodness-portfolio.vercel.app/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <script>
-      // Apply the saved theme before React loads so dark mode doesn't flash light first.
+      // Dark is the default theme; switch before React loads if the visitor chose light.
       try {
-        var t = localStorage.getItem('theme');
-        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
+        if (localStorage.getItem('theme') === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#f6f7f9');
         }
       } catch (e) {}
     </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+      <div style="max-width: 40rem; margin: 4rem auto; padding: 0 1.25rem; font-family: system-ui, sans-serif; color: #e8ecf1; background: #0d1117; line-height: 1.6">
+        <h1>Goodness Gibendi</h1>
+        <p>Frontend developer building React and Next.js interfaces, and the payment, messaging and AI integrations behind them. Thika, Kenya; open to remote roles and freelance work.</p>
+        <p>
+          <a style="color: #ff8a3d" href="mailto:gibendigoodness@gmail.com">gibendigoodness@gmail.com</a> ·
+          <a style="color: #ff8a3d" href="https://www.linkedin.com/in/goodness-gibendi/">LinkedIn</a> ·
+          <a style="color: #ff8a3d" href="https://github.com/Double-gg123">GitHub</a>
+        </p>
+      </div>
+    </noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

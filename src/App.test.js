@@ -1,21 +1,32 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import App from './App';
 
-test('renders the portfolio hero', () => {
+test('hero leads with the name in the nav and a clear headline', () => {
   render(<App />);
-  expect(screen.getByRole('heading', { level: 1, name: /goodness gibendi/i })).toBeInTheDocument();
-  expect(screen.getByText(/frontend engineer and systems architect/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { level: 1, name: /i build the interface/i })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: /illustration of goodness/i })).toBeInTheDocument();
 });
 
-test('looping hero animation can be paused (WCAG 2.2.2)', () => {
+test('case studies come first and show problem, build and result', () => {
   render(<App />);
-  const button = screen.getByRole('button', { name: /pause animations/i });
+  const work = screen.getByRole('region', { name: /case studies/i });
+  expect(within(work).getAllByText('Problem').length).toBe(3);
+  expect(within(work).getAllByText('Result').length).toBe(3);
+});
+
+test('more projects are revealed on request', () => {
+  render(<App />);
+  const button = screen.getByRole('button', { name: /show 4 more projects/i });
+  expect(button).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(button);
-  expect(screen.getByRole('button', { name: /play animations/i })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('button', { name: /show fewer projects/i })).toHaveAttribute('aria-expanded', 'true');
+  expect(screen.getAllByText('Problem').length).toBe(7);
 });
 
-test('projects show problem, build and result', () => {
+test('full stack list is hidden until asked for', () => {
   render(<App />);
-  expect(screen.getAllByText('Problem').length).toBeGreaterThan(0);
-  expect(screen.getAllByText('Result').length).toBeGreaterThan(0);
+  const button = screen.getByRole('button', { name: /show the full stack/i });
+  expect(document.getElementById('full-stack')).not.toBeVisible();
+  fireEvent.click(button);
+  expect(document.getElementById('full-stack')).toBeVisible();
 });
