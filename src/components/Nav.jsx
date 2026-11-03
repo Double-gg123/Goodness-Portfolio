@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useActiveSection, useScrollProgress, useTheme } from '../hooks';
 import { MoonIcon, SunIcon } from './Icons';
 
@@ -9,30 +9,55 @@ const links = [
   { id: 'about', label: 'About' },
 ];
 
+// Every section the nav should know about, so the highlight never goes stale.
+const watched = ['top', 'work', 'experience', 'services', 'stack', 'about', 'contact'];
+
 const Nav = () => {
-  const active = useActiveSection(links.map((l) => l.id));
+  const active = useActiveSection(watched);
   const progress = useScrollProgress();
   const [theme, toggleTheme] = useTheme();
   const [open, setOpen] = useState(false);
+  const barRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const scrolled = progress > 0.005;
 
+  // While the mobile menu is open: Escape closes it, and Tab stays inside the nav.
   useEffect(() => {
     if (!open) return undefined;
-    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab' || !barRef.current) return;
+      const focusables = [...barRef.current.querySelectorAll('a[href], button')].filter(
+        (el) => el.tabIndex >= 0 && el.offsetParent !== null,
+      );
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
   return (
     <div
+      ref={barRef}
       className={`sticky top-0 z-50 transition-colors duration-300 ${
         scrolled || open ? 'border-b border-line bg-paper/90 backdrop-blur-md' : 'border-b border-transparent bg-paper'
       }`}
     >
-      <nav aria-label="Primary" className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 md:px-8">
-        <a href="#top" aria-label="Goodness Gibendi, back to top" className="flex min-h-[44px] items-center whitespace-nowrap font-display text-lg font-bold tracking-tight text-ink">
-          <span className="sm:hidden" aria-hidden="true">Goodness</span>
-          <span className="hidden sm:inline" aria-hidden="true">Goodness Gibendi</span>
+      <nav aria-label="Primary" className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3 md:px-8">
+        <a href="#top" className="flex min-h-[44px] items-center whitespace-nowrap font-display text-base font-bold tracking-tight text-ink sm:text-lg">
+          Goodness Gibendi
         </a>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -61,11 +86,15 @@ const Nav = () => {
           </button>
           <a
             href="#contact"
-            className="flex min-h-[44px] items-center rounded-full bg-accent px-5 text-[15px] font-semibold text-on-accent transition-transform duration-300 ease-out hover:-translate-y-0.5"
+            aria-current={active === 'contact' ? 'true' : undefined}
+            className={`flex min-h-[44px] items-center rounded-full bg-accent px-4 text-[15px] font-semibold text-on-accent transition-transform duration-300 ease-out hover:-translate-y-0.5 sm:px-5 ${
+              active === 'contact' ? 'ring-2 ring-accent ring-offset-2 ring-offset-paper' : ''
+            }`}
           >
             Contact
           </a>
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
@@ -92,6 +121,7 @@ const Nav = () => {
                 key={link.id}
                 href={`#${link.id}`}
                 tabIndex={open ? 0 : -1}
+                aria-current={active === link.id ? 'true' : undefined}
                 onClick={() => setOpen(false)}
                 className={`border-b border-line py-4 font-display text-2xl font-bold ${active === link.id ? 'text-accent' : 'text-ink'}`}
               >

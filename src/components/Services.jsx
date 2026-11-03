@@ -1,5 +1,6 @@
 import React from 'react';
-import { ChatIcon } from './Icons';
+import { WHATSAPP_URL } from '../contact';
+import { ChatIcon, NewTab } from './Icons';
 
 // Written for clients: what they get, in plain language. Tools live in Stack.jsx.
 const services = [
@@ -21,6 +22,12 @@ const services = [
   },
 ];
 
+const steps = [
+  ['Message me', 'On WhatsApp or by email: tell me what you need and who it is for.'],
+  ['We talk it through', 'A short call to agree what to build and what success looks like.'],
+  ['You get a quote', 'A written plan with scope, timeline and price before any work starts.'],
+];
+
 const Services = () => (
   <section id="services" aria-labelledby="services-title">
     <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
@@ -31,25 +38,42 @@ const Services = () => (
         <p className="mt-5 max-w-sm text-lg leading-relaxed text-muted">
           For SACCOs, churches, NGOs and growing businesses, in Kenya or anywhere remote.
         </p>
+        <p lang="sw" className="mt-3 max-w-sm leading-relaxed text-body">
+          Karibu! Tunaweza kuzungumza kwa Kiswahili au Kiingereza.
+        </p>
         <a
-          href="https://wa.me/254718175283"
+          href={WHATSAPP_URL}
           target="_blank"
           rel="noreferrer"
           className="mt-8 inline-flex min-h-[52px] items-center gap-2 rounded-full bg-accent px-6 font-semibold text-on-accent transition-transform duration-300 ease-out hover:-translate-y-0.5"
         >
           <ChatIcon className="h-5 w-5" />
           Message me on WhatsApp
+          <NewTab />
         </a>
       </div>
 
-      <dl className="m-0">
-        {services.map((s) => (
-          <div key={s.title} className="grid gap-2 border-t border-line py-7 sm:grid-cols-[13rem_1fr] sm:gap-8">
-            <dt className="font-display text-xl font-bold text-ink">{s.title}</dt>
-            <dd className="m-0 leading-relaxed text-body">{s.text}</dd>
-          </div>
-        ))}
-      </dl>
+      <div>
+        <dl className="m-0">
+          {services.map((s) => (
+            <div key={s.title} className="grid gap-2 border-t border-line py-7 sm:grid-cols-[13rem_1fr] sm:gap-8">
+              <dt className="font-display text-xl font-bold text-ink">{s.title}</dt>
+              <dd className="m-0 leading-relaxed text-body">{s.text}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <h3 className="mt-10 font-display text-xl font-bold text-ink">How we work</h3>
+        <ol className="mt-4 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+          {steps.map(([title, text], i) => (
+            <li key={title} className="flex flex-col gap-2 bg-paper-alt p-5">
+              <span className="font-mono text-[13px] text-accent">Step {i + 1}</span>
+              <span className="font-semibold text-ink">{title}</span>
+              <span className="text-sm leading-relaxed text-body">{text}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   </section>
 );

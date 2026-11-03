@@ -12,7 +12,7 @@ const daily = [
   { name: 'Node.js', icon: 'nodedotjs' },
   { name: 'n8n', icon: 'n8n' },
   { name: 'Claude', icon: 'claude' },
-  { name: 'Docker', icon: 'docker' },
+  { name: 'M-Pesa Daraja', mark: 'M' },
 ];
 
 // Everything else, by layer, behind a disclosure.
@@ -21,13 +21,18 @@ const full = [
   { label: 'Backend and data', items: 'PHP, Express, PostgreSQL, MySQL, SQLite, Prisma, Zod, REST APIs, OAuth, JWT, row-level security, PHPUnit' },
   { label: 'Payments and messaging', items: 'M-Pesa Daraja (STK Push), Onfon SMS, WhatsApp Business API, Brevo, Mailchimp, Telegram Bot API' },
   { label: 'AI and automation', items: 'Anthropic Claude API, OpenAI API, Gemini, Make, LLM integration, prompt engineering, Claude Code' },
-  { label: 'Shipping', items: 'Git, GitHub Actions (CI/CD), nginx, Render, Playwright, unit testing' },
+  { label: 'Shipping', items: 'Git, GitHub Actions (CI/CD), Docker, nginx, Render, Playwright, unit testing' },
   { label: 'CMS and commerce', items: 'WordPress, Shopify (Liquid themes)' },
   { label: 'UX', items: 'Figma prototyping, WCAG accessibility, user behavioural mapping, semantic SEO, performance diagnostics' },
 ];
 
-/* Logo drawn as a mask so it takes the theme's text color. */
-const Logo = ({ icon }) => (
+/* Logo drawn as a mask so it takes the theme's text color. Tools without a logo file get a letter badge. */
+const Logo = ({ icon, mark }) =>
+  !icon ? (
+    <span aria-hidden="true" className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-ink font-display text-sm font-extrabold text-paper">
+      {mark}
+    </span>
+  ) : (
   <span
     aria-hidden="true"
     className="block h-6 w-6 shrink-0 bg-ink"
@@ -52,7 +57,7 @@ const Stack = () => {
       <ul className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3 lg:grid-cols-5">
         {daily.map((tool) => (
           <li key={tool.name} className="flex min-h-[64px] items-center gap-3 bg-paper px-5 py-4">
-            <Logo icon={tool.icon} />
+            <Logo icon={tool.icon} mark={tool.mark} />
             <span className="font-medium text-ink">{tool.name}</span>
           </li>
         ))}

@@ -1,70 +1,67 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { prefersReducedMotion } from '../hooks';
+import { ArrowRight } from './Icons';
 
-// Illustration colours. Fixed, not theme tokens: they are the character, not the UI.
-const SKIN = '#5b3a26';
-const SKIN_SHADE = '#4a2e1e';
-const HAIR = '#24170f';
-const HAIR_LIGHT = '#33231a';
-const OUTFIT = '#ff8a3d';
-const FRAME = '#120c08';
+// Layout in SVG units. Goodness's portrait sits in a hub ring; each tool is wired to the ring.
+const VB_W = 720;
+const VB_H = 490;
+const HUB = { cx: 360, cy: 230, r: 165 };
+const NODE_W = 176;
+const NODE_H = 50;
 
-// The tools she connects, wired to the character. Highlighted ones are her signature integrations.
+// `used` lists the case studies on this page that use the tool (ids from Projects.jsx).
 const nodes = [
-  { label: 'React', x: 18, y: 76, to: [176, 262], side: 'l' },
-  { label: 'Next.js', x: 0, y: 206, to: [176, 290], side: 'l' },
-  { label: 'M-Pesa', x: 18, y: 336, to: [168, 392], side: 'l', hot: true },
-  { label: 'SMS', x: 370, y: 76, to: [304, 262], side: 'r' },
-  { label: 'Claude API', x: 370, y: 206, to: [304, 290], side: 'r', hot: true },
-  { label: 'n8n', x: 370, y: 336, to: [312, 392], side: 'r' },
+  { label: 'React', x: 0, y: 50, used: [['The Career Whisperer', 'case-the-career-whisperer'], ['Digital Chama', 'case-digital-chama']] },
+  { label: 'Next.js', x: 0, y: 208, used: [['Jamii Connect', 'case-jamii-connect']] },
+  { label: 'M-Pesa', x: 0, y: 366, hot: true, used: [['Jamii Connect', 'case-jamii-connect'], ['Digital Chama', 'case-digital-chama']] },
+  { label: 'SMS', x: VB_W - NODE_W, y: 50, used: [['Jamii Connect', 'case-jamii-connect'], ['Digital Chama', 'case-digital-chama']] },
+  { label: 'Claude API', x: VB_W - NODE_W, y: 208, hot: true, used: [['Jamii Connect', 'case-jamii-connect']] },
+  { label: 'n8n', x: VB_W - NODE_W, y: 366, used: [['The Career Whisperer', 'case-the-career-whisperer']] },
 ];
-const NODE_W = 110;
-const NODE_H = 36;
 
-// Locs hang from the crown to the shoulders.
-const backLocs = Array.from({ length: 12 }, (_, i) => ({ x: 170 + i * 12.5, len: 178 + ((i * 37) % 40) }));
+// Where a node's wire meets the hub ring: same height as the node, kept off the ring's top and bottom.
+const ringPoint = (n) => {
+  const left = n.x < HUB.cx;
+  const dy = Math.max(-120, Math.min(120, n.y + NODE_H / 2 - HUB.cy));
+  const dx = Math.sqrt(HUB.r * HUB.r - dy * dy);
+  return [HUB.cx + (left ? -dx : dx), HUB.cy + dy];
+};
 
 const Avatar = () => {
-  const svgRef = useRef(null);
-  const [look, setLook] = useState({ x: 0, y: 0, tilt: 0 });
-  const [blink, setBlink] = useState(false);
+  const ref = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [still] = useState(prefersReducedMotion);
+  // The tool whose projects are showing: `hover` follows the pointer, `pinned` is set by click or tap.
+  const [hover, setHover] = useState(null);
+  const [pinned, setPinned] = useState(null);
+  const active = hover ?? pinned;
 
-  const doBlink = () => {
-    if (still) return;
-    setBlink(true);
-    window.setTimeout(() => setBlink(false), 140);
-  };
-
-  // Two blinks as the page settles (well under 5 seconds), then only on hover or focus.
+  // A pinned card closes on Escape or a click anywhere else.
   useEffect(() => {
-    if (still) return undefined;
-    const timers = [900, 2700].map((t) => window.setTimeout(doBlink, t));
-    return () => timers.forEach(clearTimeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!pinned) return undefined;
+    const onKey = (e) => e.key === 'Escape' && setPinned(null);
+    const onDown = (e) => !ref.current?.contains(e.target) && setPinned(null);
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onDown);
+    };
+  }, [pinned]);
 
-  // Eyes follow the pointer; the head tilts a little toward it.
+  // The portrait turns a few degrees toward the pointer (mouse and trackpad only).
   useEffect(() => {
     if (still || !window.matchMedia?.('(pointer: fine)').matches) return undefined;
     let frame = 0;
     let last = null;
     const update = () => {
       frame = 0;
-      const svg = svgRef.current;
-      if (!svg || !last) return;
-      const r = svg.getBoundingClientRect();
-      const cx = r.left + r.width * 0.5;
-      const cy = r.top + r.height * 0.43;
-      const dx = last.x - cx;
-      const dy = last.y - cy;
-      const dist = Math.hypot(dx, dy) || 1;
-      const reach = Math.min(dist / 160, 1);
-      setLook({
-        x: (dx / dist) * 3.6 * reach,
-        y: (dy / dist) * 2.6 * reach,
-        tilt: Math.max(-4, Math.min(4, dx / 120)),
-      });
+      const el = ref.current;
+      if (!el || !last) return;
+      const r = el.getBoundingClientRect();
+      const dx = (last.x - (r.left + r.width / 2)) / window.innerWidth;
+      const dy = (last.y - (r.top + r.height * 0.4)) / window.innerHeight;
+      setTilt({ x: Math.max(-1, Math.min(1, dx * 2)) * 7, y: Math.max(-1, Math.min(1, dy * 2)) * -5 });
     };
     const onMove = (e) => {
       last = { x: e.clientX, y: e.clientY };
@@ -77,123 +74,143 @@ const Avatar = () => {
     };
   }, [still]);
 
-  const lid = { transform: `scaleY(${blink ? 1 : 0})`, transition: 'transform 70ms ease-out' };
+  const pct = (v, total) => `${(v / total) * 100}%`;
 
   return (
-    <figure className="relative mx-auto w-full max-w-[480px]" onMouseEnter={doBlink}>
-      <svg
-        ref={svgRef}
-        viewBox="0 0 480 480"
-        className="h-auto w-full"
-        role="img"
-        aria-label="Illustration of Goodness: deep brown skin, shoulder-length locs, round glasses and an orange top, wired to the tools she connects: React, Next.js, M-Pesa, SMS, the Claude API and n8n."
-      >
-        {/* Wires from each tool to the character */}
+    <figure ref={ref} className="relative mx-auto w-full max-w-[330px] sm:max-w-[440px] lg:max-w-[580px]">
+      <div className="relative" style={{ aspectRatio: `${VB_W} / ${VB_H}` }}>
+        {/* Hub ring and wires, behind the portrait */}
+        <svg viewBox={`0 0 ${VB_W} ${VB_H}`} className="absolute inset-0 h-full w-full" aria-hidden="true">
+          <circle cx={HUB.cx} cy={HUB.cy} r={HUB.r} className="ring fill-card stroke-faint" strokeWidth="1.5" />
+          {nodes.map((n, i) => {
+            const left = n.x < HUB.cx;
+            const sx = left ? n.x + NODE_W : n.x;
+            const sy = n.y + NODE_H / 2;
+            const [tx, ty] = ringPoint(n);
+            const mx = (sx + tx) / 2;
+            return (
+              <g key={`w-${n.label}`}>
+                <path
+                  d={`M${sx} ${sy} C${mx} ${sy} ${mx} ${ty} ${tx} ${ty}`}
+                  className={`wire transition-[stroke-width,opacity] duration-300 ${n.hot || active === n.label ? 'stroke-accent' : 'stroke-faint'} ${
+                    active && active !== n.label ? 'opacity-30' : 'opacity-100'
+                  }`}
+                  strokeWidth={active === n.label ? 4 : n.hot ? 2.5 : 1.5}
+                  fill="none"
+                  style={{ '--d': `${300 + i * 90}ms` }}
+                />
+                <circle
+                  cx={tx}
+                  cy={ty}
+                  r={active === n.label ? 7 : 5}
+                  className={`node transition-all duration-300 ${active === n.label ? 'fill-accent stroke-accent' : `fill-paper ${n.hot ? 'stroke-accent' : 'stroke-faint'}`}`}
+                  strokeWidth="2"
+                  style={{ '--d': `${700 + i * 90}ms` }}
+                />
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Portrait: rises in once, then follows the pointer a little */}
+        <div
+          className="node absolute"
+          style={{
+            '--d': '150ms',
+            left: pct(190, VB_W),
+            width: pct(340, VB_W),
+            top: pct(60, VB_H),
+            perspective: '900px',
+          }}
+        >
+          <img
+            src={`${process.env.PUBLIC_URL}/goodness.webp`}
+            alt="Illustration of Goodness Gibendi: short auburn hair, round gold glasses, pearl earrings and a black shirt, smiling."
+            width="720"
+            height="857"
+            fetchPriority="high"
+            decoding="async"
+            className="block h-auto w-full"
+            style={{
+              transform: `rotateY(${tilt.x}deg) rotateX(${tilt.y}deg)`,
+              transformOrigin: '50% 70%',
+              transition: 'transform 700ms cubic-bezier(0.16, 1, 0.3, 1)',
+              WebkitMaskImage: 'linear-gradient(to bottom, #000 72%, transparent 97%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%)',
+              WebkitMaskComposite: 'source-in',
+              maskComposite: 'intersect',
+              maskImage: 'linear-gradient(to bottom, #000 72%, transparent 97%), linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%)',
+            }}
+          />
+        </div>
+
+        {/* Tool nodes: hover, focus or tap to see the projects that use each tool */}
         {nodes.map((n, i) => {
-          const sx = n.side === 'l' ? n.x + NODE_W : n.x;
-          const sy = n.y + NODE_H / 2;
-          const [tx, ty] = n.to;
-          const mx = (sx + tx) / 2;
+          const left = n.x < HUB.cx;
+          const below = n.y < HUB.cy + 60;
+          const isActive = active === n.label;
+          const cardId = `tool-${n.label.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
           return (
-            <path
-              key={`w-${n.label}`}
-              d={`M${sx} ${sy} C${mx} ${sy} ${mx} ${ty} ${tx} ${ty}`}
-              className={`wire ${n.hot ? 'stroke-accent' : 'stroke-line'}`}
-              strokeWidth={n.hot ? 2 : 1.5}
-              strokeDasharray={n.hot ? undefined : '4 5'}
-              fill="none"
-              style={{ '--d': `${200 + i * 90}ms` }}
-            />
+            <div
+              key={`n-${n.label}`}
+              className={`node absolute ${isActive ? 'z-20' : 'z-10'}`}
+              style={{ '--d': `${750 + i * 90}ms`, left: pct(n.x, VB_W), top: pct(n.y, VB_H), width: pct(NODE_W, VB_W), height: pct(NODE_H, VB_H) }}
+              onMouseEnter={() => setHover(n.label)}
+              onMouseLeave={() => setHover(null)}
+            >
+              <button
+                type="button"
+                aria-label={`${n.label}: show projects that use it`}
+                aria-expanded={isActive}
+                aria-controls={cardId}
+                onClick={() => setPinned((p) => (p === n.label ? null : n.label))}
+                onFocus={() => setHover(n.label)}
+                onBlur={(e) => !e.currentTarget.parentElement.contains(e.relatedTarget) && setHover(null)}
+                className={`relative flex h-full w-full items-center justify-center whitespace-nowrap rounded-full border font-mono text-[12px] transition-colors duration-200 before:absolute before:-inset-y-2.5 before:inset-x-0 before:content-[''] sm:text-sm lg:text-[15px] ${
+                  isActive
+                    ? 'border-accent bg-accent text-on-accent'
+                    : `bg-card ${n.hot ? 'border-accent text-accent' : 'border-faint text-ink'} hover:border-accent`
+                }`}
+              >
+                {n.label}
+              </button>
+              <div
+                id={cardId}
+                role="region"
+                aria-label={`Projects using ${n.label}`}
+                hidden={!isActive}
+                onBlur={(e) => !e.currentTarget.parentElement.contains(e.relatedTarget) && setHover(null)}
+                className={`absolute w-60 rounded-xl border border-line bg-card p-3 text-left shadow-[0_12px_32px_rgba(0,0,0,0.35)] ${
+                  left ? 'left-0' : 'right-0'
+                } ${below ? 'top-full mt-2' : 'bottom-full mb-2'}`}
+              >
+                <p className="m-0 px-2 pb-1 text-xs font-semibold text-faint">Used in</p>
+                <ul className="m-0 list-none p-0">
+                  {n.used.map(([name, id]) => (
+                    <li key={id}>
+                      <a
+                        href={`#${id}`}
+                        onClick={() => {
+                          setPinned(null);
+                          setHover(null);
+                        }}
+                        className="flex min-h-[44px] items-center justify-between gap-2 rounded-lg px-2 font-semibold text-ink transition-colors hover:bg-paper hover:text-accent"
+                      >
+                        {name}
+                        <ArrowRight className="h-4 w-4 shrink-0 text-accent" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           );
         })}
-
-        {/* Character */}
-        <g style={{ transform: `rotate(${look.tilt}deg)`, transformOrigin: '240px 330px', transition: 'transform 600ms cubic-bezier(0.16,1,0.3,1)' }}>
-          {/* Locs behind the head */}
-          <g>
-            {backLocs.map((l, i) => (
-              <rect key={`bl-${l.x}`} x={l.x - 7} y={150} width={14} height={l.len} rx={7} fill={i % 2 ? HAIR_LIGHT : HAIR} />
-            ))}
-          </g>
-
-          {/* Shoulders and top */}
-          <path d="M112 480 C112 396 168 360 240 360 C312 360 368 396 368 480 Z" fill={OUTFIT} />
-          <path d="M216 296 L264 296 L266 364 Q240 380 214 364 Z" fill={SKIN_SHADE} />
-          <path d="M210 362 Q240 396 270 362 Z" fill={SKIN} />
-
-          {/* Front locs falling over the shoulders */}
-          {[160, 172, 184].map((x) => (
-            <rect key={`fl-${x}`} x={x - 7} y={168} width={14} height={210 - (x - 160)} rx={7} fill={x === 172 ? HAIR_LIGHT : HAIR} />
-          ))}
-          {[296, 308, 320].map((x) => (
-            <rect key={`fr-${x}`} x={x - 7} y={168} width={14} height={186 + (x - 296)} rx={7} fill={x === 308 ? HAIR_LIGHT : HAIR} />
-          ))}
-
-          {/* Ears and earrings */}
-          <ellipse cx="176" cy="214" rx="10" ry="15" fill={SKIN_SHADE} />
-          <ellipse cx="304" cy="214" rx="10" ry="15" fill={SKIN_SHADE} />
-          <circle cx="176" cy="236" r="5" fill={OUTFIT} />
-          <circle cx="304" cy="236" r="5" fill={OUTFIT} />
-
-          {/* Face */}
-          <ellipse cx="240" cy="206" rx="64" ry="78" fill={SKIN} />
-          <ellipse cx="200" cy="242" rx="11" ry="6" fill="#c0634a" opacity="0.28" />
-          <ellipse cx="280" cy="242" rx="11" ry="6" fill="#c0634a" opacity="0.28" />
-
-          {/* Hair crown with loc texture */}
-          <path d="M170 214 C158 128 204 104 240 104 C278 104 322 128 310 214 C302 168 282 146 240 144 C198 146 178 168 170 214 Z" fill={HAIR} />
-          <path d="M196 120 Q200 140 196 160 M222 110 Q226 132 222 150 M248 108 Q252 130 248 148 M274 114 Q278 136 274 156 M298 128 Q302 150 298 170" stroke={HAIR_LIGHT} strokeWidth="5" strokeLinecap="round" fill="none" />
-
-          {/* Brows */}
-          <path d="M194 184 Q208 176 224 182" stroke="#1a110b" strokeWidth="4" strokeLinecap="round" fill="none" />
-          <path d="M256 182 Q272 176 286 184" stroke="#1a110b" strokeWidth="4" strokeLinecap="round" fill="none" />
-
-          {/* Eyes: whites, pupils that track, lids that blink */}
-          <ellipse cx="210" cy="210" rx="9.5" ry="7" fill="#f4ece4" />
-          <ellipse cx="270" cy="210" rx="9.5" ry="7" fill="#f4ece4" />
-          <g style={{ transform: `translate(${look.x}px, ${look.y}px)`, transition: 'transform 120ms ease-out' }}>
-            <circle cx="210" cy="210" r="4.4" fill="#1a110b" />
-            <circle cx="270" cy="210" r="4.4" fill="#1a110b" />
-            <circle cx="211.6" cy="208.4" r="1.3" fill="#ffffff" />
-            <circle cx="271.6" cy="208.4" r="1.3" fill="#ffffff" />
-          </g>
-          <rect x="198" y="201" width="24" height="18" fill={SKIN} style={{ ...lid, transformOrigin: '210px 201px' }} />
-          <rect x="258" y="201" width="24" height="18" fill={SKIN} style={{ ...lid, transformOrigin: '270px 201px' }} />
-
-          {/* Round glasses */}
-          <circle cx="210" cy="210" r="22" fill="rgba(255,255,255,0.07)" stroke={FRAME} strokeWidth="3.5" />
-          <circle cx="270" cy="210" r="22" fill="rgba(255,255,255,0.07)" stroke={FRAME} strokeWidth="3.5" />
-          <path d="M232 208 Q240 202 248 208 M188 206 L176 201 M292 206 L304 201" stroke={FRAME} strokeWidth="3.5" strokeLinecap="round" fill="none" />
-
-          {/* Nose and smile */}
-          <path d="M238 222 Q242 238 233 243 Q240 248 248 244" stroke="#3a2416" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-          <path d="M220 258 Q240 274 260 258" stroke="#2a160d" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-        </g>
-
-        {/* Tool nodes, on top of the wires */}
-        {nodes.map((n, i) => (
-          <g key={`n-${n.label}`} className="node" style={{ '--d': `${700 + i * 90}ms` }}>
-            <rect
-              x={n.x + 1}
-              y={n.y}
-              width={NODE_W - 2}
-              height={NODE_H}
-              rx={NODE_H / 2}
-              className={`fill-card ${n.hot ? 'stroke-accent' : 'stroke-line'}`}
-              strokeWidth="1.5"
-            />
-            <text
-              x={n.x + NODE_W / 2}
-              y={n.y + NODE_H / 2 + 5}
-              textAnchor="middle"
-              className={`font-mono ${n.hot ? 'fill-accent' : 'fill-ink'}`}
-              style={{ fontSize: 14 }}
-            >
-              {n.label}
-            </text>
-          </g>
-        ))}
-      </svg>
+      </div>
+      <figcaption className="mt-1 text-center">
+        <span className="block font-display text-xl font-bold tracking-tight text-ink">Goodness Gibendi</span>
+        <span className="mt-0.5 block text-sm text-faint">Frontend developer · Thika, Kenya</span>
+        <span className="sr-only">Shown wired to the tools she connects: React, Next.js, M-Pesa, SMS, the Claude API and n8n.</span>
+      </figcaption>
     </figure>
   );
 };

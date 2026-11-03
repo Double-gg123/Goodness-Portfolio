@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
-import { Reveal } from '../hooks';
-import { ArrowUpRight, MinusIcon, PlusIcon } from './Icons';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Reveal, prefersReducedMotion } from '../hooks';
+import { ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
 
 // Case studies, strongest first. Live sites show a screenshot; private work shows how the system flows.
+// `outcome: false` labels the last row "Shipped" when there is no measured result yet.
 const projects = [
   {
     name: 'Jamii Connect',
     role: 'Growth hacker at Wakandi, in a team of 10+',
-    problem: 'Kenyan SACCOs and churches need to reach members reliably, by SMS, email and WhatsApp, in the language members read.',
-    built: 'Integrations for a production multi-tenant platform: Onfon SMS with delivery reports and sign-in codes, M-Pesa top-ups, Brevo email, the WhatsApp Business API, and an English-to-Kiswahili translator on the Claude API with Zod-validated output and a safe fallback.',
-    result: 'In production. 190 commits in my first month, plus a referral programme, lifecycle emails and the ChurchPay giving product, with unit tests in GitHub Actions CI.',
-    stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M-Pesa Daraja',
+    problem: 'Kenyan SACCOs and churches need to reach their members reliably, by SMS, email and WhatsApp, in the language members read.',
+    built: 'The integrations behind a production platform: SMS sign-in codes and delivery reports, M-Pesa top-ups, email and WhatsApp, plus an English-to-Kiswahili message translator built on the Claude API that falls back safely to English.',
+    result: 'In production. 190 commits in my first month, plus a referral programme, lifecycle emails and the ChurchPay giving product, with unit tests running in CI.',
+    stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M-Pesa Daraja · Onfon · Brevo',
     flow: {
       label: 'A member tops up their account',
       steps: [
         ['Member taps “Top up”', 'Next.js'],
-        ['STK push to their phone', 'M-Pesa Daraja', true],
-        ['Ledger update, row-level security', 'Supabase'],
+        ['Payment prompt on their phone', 'M-Pesa STK Push', true],
+        ['Balance updated securely', 'Supabase'],
       ],
       branch: [
-        ['Receipt by SMS', 'Onfon · WhatsApp · Brevo'],
-        ['Written in Kiswahili', 'Claude API + Zod', true],
+        ['Receipt sent', 'SMS · WhatsApp · email'],
+        ['Written in Kiswahili', 'Claude API', true],
       ],
     },
   },
@@ -33,13 +34,15 @@ const projects = [
     stack: 'React · Tailwind CSS · JavaScript · n8n',
     url: 'https://thecareerwhisperer.net/',
     shot: 'career-whisperer.webp',
+    shotH: 2377,
   },
   {
     name: 'Digital Chama',
     role: 'Sole developer, prototype',
     problem: 'Group savings and loan groups (chamas) need shared accounts, loans and approvals that every member can trust.',
-    built: 'A full-stack banking prototype with about 94 API endpoints: M-Pesa STK Push, core-banking account creation, ID verification, OCR, SMS, and real-time sanctions screening with timeouts and fallback.',
+    built: 'A full-stack banking prototype with about 94 API endpoints: M-Pesa payments, account creation, ID verification, OCR, SMS, and real-time sanctions screening with timeouts and fallback.',
     result: 'Role-based access, multi-signatory approvals, loan workflows, PDF reports and a full audit trail.',
+    outcome: false,
     stack: 'Node.js · TypeScript · Express · React · SQLite · JWT',
     flow: {
       label: 'A member takes a loan',
@@ -53,17 +56,36 @@ const projects = [
     },
   },
   {
+    name: 'AI Job Application Automation',
+    role: 'Sole developer',
+    problem: 'Finding and applying for relevant jobs across dozens of boards is slow, repetitive work.',
+    built: 'A system that gathers jobs from about 20 boards, scores each against a CV with an LLM, and tailors the CV and cover letter with an automatic honesty check. A person reviews every application in Telegram before anything is sent.',
+    result: 'Runs the whole pipeline, from finding jobs to submitting reviewed applications, for two users. Built with AI coding agents (Claude Code).',
+    stack: 'Node.js · TypeScript · PostgreSQL · Prisma · Docker · Playwright · Gemini API',
+    flow: {
+      label: 'From job post to application',
+      steps: [
+        ['Jobs gathered from ~20 boards', 'Playwright + feeds'],
+        ['Scored against the CV', 'Gemini API', true],
+        ['CV and letter tailored, honesty-checked', 'LLM + rules'],
+        ['Reviewed by a person', 'Telegram Bot API', true],
+        ['Sent', 'Gmail · form-filling'],
+      ],
+    },
+  },
+  {
     name: 'Briwnet Awards',
-    role: 'Software engineer at Briwnet',
+    role: 'Software engineer at Briwnet (part-time)',
     problem: 'An influencer awards event needed public voting that could handle nominees campaigning for votes.',
     built: 'An awards platform where nominees run campaigns to gather votes in categories such as Influencer of the Year.',
     result: 'Public voting built for a target of about 10,000 votes.',
+    outcome: false,
     stack: 'React · Next.js · PHP · Laravel · MySQL',
     flow: {
       label: 'A fan votes for a nominee',
       steps: [
         ['Nominee shares a campaign link', 'Next.js'],
-        ['Fan casts a public vote', 'Laravel', true],
+        ['Fan casts a public vote', 'Laravel'],
         ['Tallied per category', 'MySQL'],
       ],
     },
@@ -77,6 +99,7 @@ const projects = [
     stack: 'React · Semantic HTML5 · CSS Grid · WCAG',
     url: 'https://amaresbigplanet.com/',
     shot: 'amares-big-planet.webp',
+    shotH: 1290,
   },
   {
     name: 'Lumen-ra',
@@ -84,106 +107,257 @@ const projects = [
     problem: 'An educational platform had to keep confidential user data safe.',
     built: 'Modular interface features, API integrations and server-side authentication.',
     result: 'Role-based authorization protects confidential user data.',
+    outcome: false,
     stack: 'React · Vite · API integrations · Auth',
     url: 'https://lumen-ra.vercel.app/',
     shot: 'lumen-ra.webp',
-  },
-  {
-    name: 'AI Job Application Automation',
-    role: 'Sole developer',
-    problem: 'Finding and applying for relevant jobs across dozens of boards is slow, repetitive work.',
-    built: 'A system that collects jobs from about 20 boards and feeds, scores each one against a CV with an LLM, and tailors the CV and cover letter with an automatic honesty check. Telegram bots handle review before anything is sent.',
-    result: 'Runs the whole pipeline, from finding jobs to submitting applications, for two users. Built with AI coding agents (Claude Code).',
-    stack: 'Node.js · TypeScript · PostgreSQL · Prisma · Docker · Playwright · Gemini API',
-    flow: {
-      label: 'From job post to application',
-      steps: [
-        ['Jobs gathered from ~20 boards', 'Playwright + feeds'],
-        ['Scored against the CV', 'Gemini API', true],
-        ['CV and letter tailored, honesty-checked', 'LLM + rules'],
-        ['Reviewed by a person', 'Telegram Bot API', true],
-        ['Sent', 'Gmail · form-filling'],
-      ],
-    },
+    shotH: 2400,
   },
 ];
 
-const FEATURED = 3;
+const FEATURED = 4;
 
-const Node = ({ text, system, hot }) => (
-  <div className={`flex items-center justify-between gap-4 rounded-xl border px-4 py-3 ${hot ? 'border-accent' : 'border-line'} bg-paper`}>
+// Measured results, shown once at the top of the work. Numbers count up the first time they appear.
+const results = [
+  { value: 4, suffix: '×', label: 'organic traffic for a consulting platform' },
+  { value: 10, suffix: ' hrs', label: 'saved every week by automating 5 workflows' },
+  { value: 10000, label: 'email subscribers grown with automation' },
+  { value: 200, prefix: '~', label: 'Shopify orders a month after a store rebuild' },
+];
+
+const format = ({ prefix = '', suffix = '' }, n) => `${prefix}${n.toLocaleString('en-US')}${suffix}`;
+
+/* Counts from 0 to the value once, when it scrolls into view. Screen readers only get the final value. */
+const CountUp = ({ item }) => {
+  const ref = useRef(null);
+  const [n, setN] = useState(item.value);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof IntersectionObserver === 'undefined' || prefersReducedMotion()) return undefined;
+    setN(0);
+    let frame = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        const start = performance.now();
+        const tick = (now) => {
+          const t = Math.min((now - start) / 1100, 1);
+          setN(Math.round(item.value * (1 - (1 - t) ** 4)));
+          if (t < 1) frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+      },
+      { threshold: 0.6 },
+    );
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [item.value]);
+
+  return (
+    <>
+      <span ref={ref} aria-hidden="true" className="tabular-nums">
+        {format(item, n)}
+      </span>
+      <span className="sr-only">{format(item, item.value)}</span>
+    </>
+  );
+};
+
+export const slug = (name) => `case-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}`;
+
+const STEP_MS = 420;
+
+/* Plays a flow diagram step by step: once when it first scrolls into view, and again on hover or Replay. */
+const useFlowPlayback = (stages) => {
+  const ref = useRef(null);
+  const timer = useRef(0);
+  const [lit, setLit] = useState(stages); // `stages` = settled: every step shown as done
+
+  const play = useCallback(() => {
+    if (prefersReducedMotion()) return;
+    clearInterval(timer.current);
+    let i = 0;
+    setLit(0);
+    timer.current = setInterval(() => {
+      i += 1;
+      setLit(i);
+      if (i >= stages) clearInterval(timer.current);
+    }, STEP_MS);
+  }, [stages]);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof IntersectionObserver === 'undefined' || prefersReducedMotion()) return undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          play();
+        }
+      },
+      { threshold: 0.5 },
+    );
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      clearInterval(timer.current);
+    };
+  }, [play]);
+
+  return { ref, lit, play };
+};
+
+// Where a step is in the playback: not reached yet, happening now, or done.
+const stateOf = (i, lit) => (i < lit ? 'done' : i === lit ? 'active' : 'pending');
+
+const stepClass = (state, hot) => {
+  const border = state === 'active' || hot ? 'border-accent' : 'border-line';
+  const glow = state === 'active' ? 'bg-accent/10 shadow-[0_0_0_4px_rgb(var(--accent)/0.18)]' : 'bg-paper';
+  const fade = state === 'pending' ? 'opacity-40' : 'opacity-100';
+  return `${border} ${glow} ${fade} transition-[opacity,background-color,box-shadow,border-color] duration-300 ease-out`;
+};
+
+const Node = ({ text, system, hot, state }) => (
+  <div className={`flex items-center justify-between gap-4 rounded-xl border px-4 py-3 ${stepClass(state, hot)}`}>
     <span className="text-[15px] text-ink">{text}</span>
     <span className={`text-right font-mono text-[13px] ${hot ? 'text-accent' : 'text-faint'}`}>{system}</span>
   </div>
 );
 
-const Wire = () => <div className="ml-6 h-4 w-px bg-line" aria-hidden="true" />;
-
-/* How a private project's system works, drawn as a simple vertical flow. */
-const Flow = ({ flow }) => (
-  <figure className="flex flex-col rounded-2xl border border-line bg-card p-5 md:p-6">
-    <figcaption className="mb-4 font-mono text-[13px] text-faint">{flow.label}</figcaption>
-    <ol className="flex flex-col" aria-label={flow.label}>
-      {flow.steps.map(([text, system, hot], i) => (
-        <li key={text}>
-          {i > 0 && <Wire />}
-          <Node text={text} system={system} hot={hot} />
-        </li>
-      ))}
-      {flow.branch && (
-        <li>
-          <Wire />
-          <div className="grid gap-3 sm:grid-cols-2">
-            {flow.branch.map(([text, system, hot]) => (
-              <div key={text} className={`flex flex-col gap-1 rounded-xl border px-4 py-3 ${hot ? 'border-accent' : 'border-line'} bg-paper`}>
-                <span className="text-[15px] text-ink">{text}</span>
-                <span className={`font-mono text-[13px] ${hot ? 'text-accent' : 'text-faint'}`}>{system}</span>
-              </div>
-            ))}
-          </div>
-        </li>
-      )}
-    </ol>
-  </figure>
+// The wire into a step lights up once the signal has reached that step.
+const Wire = ({ on }) => (
+  <div className={`ml-6 h-4 w-px transition-colors duration-300 ${on ? 'bg-accent' : 'bg-faint/60'}`} aria-hidden="true" />
 );
 
-const Shot = ({ project }) => (
-  <a
-    href={project.url}
-    target="_blank"
-    rel="noreferrer"
-    className="group block overflow-hidden rounded-2xl border border-line bg-card"
-    aria-label={`${project.name} live site (opens in a new tab)`}
-  >
-    <img
-      src={`${process.env.PUBLIC_URL}/shots/${project.shot}`}
-      alt={`Homepage of ${project.name}`}
-      width="1280"
-      height="800"
-      loading="lazy"
-      decoding="async"
-      className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-    />
-  </a>
-);
+/* How a private project's system works, drawn as a vertical flow that can play through. */
+const Flow = ({ flow }) => {
+  const stages = flow.steps.length + (flow.branch ? 1 : 0);
+  const { ref, lit, play } = useFlowPlayback(stages);
+  const branchState = stateOf(flow.steps.length, lit);
+  const branchOn = lit >= flow.steps.length;
 
-const Row = ({ label, children, strong }) => (
+  return (
+    <figure ref={ref} onMouseEnter={play} className="flex flex-col rounded-2xl border border-line bg-card p-5 md:p-6">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <figcaption className="font-mono text-[13px] text-faint">{flow.label}</figcaption>
+        <button
+          type="button"
+          onClick={play}
+          aria-label={`Replay: ${flow.label}`}
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-muted transition-colors hover:text-ink motion-reduce:hidden"
+        >
+          <ReplayIcon className="h-4 w-4" />
+          Replay
+        </button>
+      </div>
+      <ol className="flex flex-col">
+        {flow.steps.map(([text, system, hot], i) => (
+          <li key={text}>
+            {i > 0 && <Wire on={i <= lit} />}
+            <Node text={text} system={system} hot={hot} state={stateOf(i, lit)} />
+          </li>
+        ))}
+        {flow.branch && (
+          <li>
+            <div className="ml-6 flex h-4 w-[calc(50%+0.25rem)] items-end" aria-hidden="true">
+              <div className={`h-full w-px transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint/60'}`} />
+              <div className={`h-px flex-1 transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint/60'}`} />
+              <div className={`h-full w-px transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint/60'}`} />
+            </div>
+            <p className="sr-only">Then, at the same time:</p>
+            <div className="grid grid-cols-2 gap-3">
+              {flow.branch.map(([text, system, hot]) => (
+                <div key={text} className={`flex flex-col gap-1 rounded-xl border px-4 py-3 ${stepClass(branchState, hot)}`}>
+                  <span className="text-[15px] text-ink">{text}</span>
+                  <span className={`font-mono text-[13px] ${hot ? 'text-accent' : 'text-faint'}`}>{system}</span>
+                </div>
+              ))}
+            </div>
+          </li>
+        )}
+      </ol>
+    </figure>
+  );
+};
+
+/* A live site's screenshot in a 16:10 window. Hovering (or keyboard focus) scrolls through the page. */
+const Shot = ({ project }) => {
+  const [height, width] = [project.shotH, 960];
+  const shift = Math.max(0, (1 - (width * 10) / 16 / height) * 100); // % of image height to travel
+  const style = { '--shift': `-${shift.toFixed(2)}%`, transitionDuration: `${Math.round(shift * 55)}ms` };
+
+  return (
+    <div>
+      <a
+        href={project.url}
+        target="_blank"
+        rel="noreferrer"
+        className="group relative block aspect-[16/10] overflow-hidden rounded-2xl border border-line bg-card"
+      >
+        <img
+          src={`${process.env.PUBLIC_URL}/shots/${project.shot}`}
+          alt={`The ${project.name} website`}
+          width={width}
+          height={height}
+          loading="lazy"
+          decoding="async"
+          style={style}
+          className="absolute left-0 top-0 h-auto w-full ease-in-out dark:brightness-[0.88] motion-safe:transition-transform motion-safe:group-hover:[transform:translateY(var(--shift))] motion-safe:group-focus-visible:[transform:translateY(var(--shift))]"
+        />
+        <span className="sr-only">{project.name} live site (opens in a new tab)</span>
+      </a>
+      <p className="mt-2 hidden text-sm text-faint motion-safe:[@media(hover:hover)]:block">Hover to scroll through the site</p>
+    </div>
+  );
+};
+
+const Row = ({ label, children }) => (
   <div className="grid gap-1 border-t border-line py-4 sm:grid-cols-[8.5rem_1fr] sm:gap-6">
     <dt className="text-sm font-semibold text-faint">{label}</dt>
-    <dd className={`m-0 leading-relaxed ${strong ? 'font-semibold text-ink' : 'text-body'}`}>{children}</dd>
+    <dd className="m-0 leading-relaxed text-body">{children}</dd>
   </div>
 );
 
-const CaseStudy = ({ project }) => (
-  <article className="grid gap-8 border-t border-line py-14 first:border-t-0 first:pt-4 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
-    <Reveal className="lg:pt-2">{project.flow ? <Flow flow={project.flow} /> : <Shot project={project} />}</Reveal>
-    <div>
-      <h3 className="font-display text-3xl font-extrabold tracking-tight text-ink md:text-4xl">{project.name}</h3>
+/* Bold only the result's first sentence, so the headline outcome stands out. */
+const ResultText = ({ text }) => {
+  const i = text.indexOf('. ');
+  if (i === -1) return <strong className="font-semibold text-ink">{text}</strong>;
+  return (
+    <>
+      <strong className="font-semibold text-ink">{text.slice(0, i + 1)}</strong>
+      {text.slice(i + 1)}
+    </>
+  );
+};
+
+const CaseStudy = ({ project, headingRef }) => (
+  <article
+    id={slug(project.name)}
+    className="grid gap-6 border-t border-line py-14 first:border-t-0 first:pt-4 lg:grid-cols-[1fr_1.05fr] lg:gap-x-14 lg:gap-y-0"
+  >
+    <header className="lg:col-start-2 lg:row-start-1">
+      <h3 ref={headingRef} tabIndex={-1} className="font-display text-3xl font-extrabold tracking-tight text-ink outline-none md:text-4xl">
+        {project.name}
+      </h3>
       <p className="mt-2 text-muted">{project.role}</p>
-      <dl className="mt-6">
+    </header>
+
+    <Reveal className="lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:pt-2">
+      {project.flow ? <Flow flow={project.flow} /> : <Shot project={project} />}
+    </Reveal>
+
+    <div className="lg:col-start-2">
+      <dl className="mt-0 lg:mt-6">
         <Row label="Problem">{project.problem}</Row>
         <Row label="What I built">{project.built}</Row>
-        <Row label="Result" strong>{project.result}</Row>
+        <Row label={project.outcome === false ? 'Shipped' : 'Result'}>
+          <ResultText text={project.result} />
+        </Row>
       </dl>
       <p className="mt-2 border-t border-line pt-4 font-mono text-[13px] leading-relaxed text-faint">{project.stack}</p>
       {project.url && (
@@ -195,6 +369,7 @@ const CaseStudy = ({ project }) => (
         >
           Visit the live site
           <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          <NewTab />
         </a>
       )}
     </div>
@@ -203,8 +378,23 @@ const CaseStudy = ({ project }) => (
 
 const Projects = () => {
   const [showAll, setShowAll] = useState(false);
+  const firstNewRef = useRef(null);
+  const toggleRef = useRef(null);
+  const userToggled = useRef(false);
   const shown = showAll ? projects : projects.slice(0, FEATURED);
   const more = projects.length - FEATURED;
+
+  // Expanding moves focus to the first newly shown project; collapsing brings the button back into view.
+  useEffect(() => {
+    if (!userToggled.current) return;
+    if (showAll) firstNewRef.current?.focus();
+    else toggleRef.current?.scrollIntoView({ block: 'center' });
+  }, [showAll]);
+
+  const toggle = () => {
+    userToggled.current = true;
+    setShowAll((s) => !s);
+  };
 
   return (
     <section id="work" aria-labelledby="work-title">
@@ -212,21 +402,31 @@ const Projects = () => {
         <h2 id="work-title" className="font-display text-4xl font-extrabold tracking-tight text-ink md:text-6xl">
           Case studies
         </h2>
-        <p className="max-w-md text-lg leading-relaxed text-muted">
-          The problem, what I built, and what changed.
-        </p>
+        <p className="max-w-md text-lg leading-relaxed text-muted">The problem, what I built, and what changed.</p>
       </div>
 
-      <div id="case-studies" className="mt-10">
-        {shown.map((project) => (
-          <CaseStudy key={project.name} project={project} />
+      <dl className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line lg:grid-cols-4">
+        {results.map((item) => (
+          <div key={item.label} className="flex flex-col gap-1 bg-paper-alt px-5 py-5">
+            <dt className="order-2 text-sm leading-snug text-muted">{item.label}</dt>
+            <dd className="order-1 m-0 font-display text-3xl font-extrabold tracking-tight text-ink">
+              <CountUp item={item} />
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div id="case-studies" className="mt-12">
+        {shown.map((project, i) => (
+          <CaseStudy key={project.name} project={project} headingRef={i === FEATURED ? firstNewRef : undefined} />
         ))}
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-line pt-8">
         <button
+          ref={toggleRef}
           type="button"
-          onClick={() => setShowAll((s) => !s)}
+          onClick={toggle}
           aria-expanded={showAll}
           aria-controls="case-studies"
           className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
@@ -242,6 +442,7 @@ const Projects = () => {
         >
           Code on GitHub
           <ArrowUpRight className="h-4 w-4" />
+          <NewTab />
         </a>
       </div>
     </section>

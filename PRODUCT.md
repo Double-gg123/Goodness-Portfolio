@@ -36,6 +36,7 @@ A frontend developer (React / Next.js / TypeScript) whose edge is the systems be
 
 - Experience and project facts come from Goodness's CV profile (Wakandi / Jamii Connect, Briwnet, The Career Whisperer, Mediva internship for UX roles only).
 - Live sites: thecareerwhisperer.net, amaresbigplanet.com, lumen-ra.vercel.app.
+- Illustrated portrait of Goodness supplied by her: `public/goodness.webp` (cut-out of the original). Use it, never a drawn substitute.
 - No testimonials, client logos, pricing, CV PDF or product screenshots of private work exist yet. Do not fabricate them.
 - Betting-related work (Briwnet tipster platform) is not named on the site.
 

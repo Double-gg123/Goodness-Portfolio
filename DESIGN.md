@@ -29,13 +29,19 @@ Direction A, "Systems diagram": a dark, technical page where the person is shown
 ## Components
 
 - **Flow diagram** (`Projects.jsx`): vertical steps joined by 1px wires; signature integrations get an accent border.
-- **Avatar** (`Avatar.jsx`): SVG illustration, fixed character colours. Wires draw in once on load, eyes follow the pointer, blinks twice on load and on hover. No looping motion.
+- **Avatar** (`Avatar.jsx`): Goodness's own illustrated portrait (`public/goodness.webp`, background removed) in a hub ring; six tool nodes are wired to the ring. Ring and wires draw in once on load, the portrait rises in, then tilts a few degrees toward the pointer. No looping motion.
 - **Buttons**: pill, min 44px (primary 52px). Primary = accent fill; secondary = `line` border.
-- **Lists over cards**: Services, Stack groups, Experience and results use bordered rows, not card grids.
+- **Lists over cards**: Services, Stack groups and Experience use bordered rows, not card grids.
+- **Results strip** (`Projects.jsx`): four measured outcomes at the top of Case studies. Experience may mention them in context; the hero and About do not repeat them.
+- **Case study**: name and role, then the visual, then Problem / What I built / Result (or "Shipped" when there is no measured outcome). Only the first sentence of a result is bold.
+- **External links** carry a screen-reader "(opens in a new tab)" note (`NewTab` in `Icons.jsx`). Contact details live in `src/contact.js`.
 
 ## Motion
 
-- One authored moment: the hero wiring. Cards and images use `<Reveal>` once; body text never animates.
+- The hero wiring draws in once on load. Tool labels around the portrait are buttons: hover, focus or tap lights their wire and opens a 'Used in' card linking to case studies.
+- Flow diagrams play step by step once when first seen, again on hover or via Replay (about 2 s, never loops).
+- The results strip counts up once. Live-site screenshots scroll through the page on hover or keyboard focus.
+- Cards and images use `<Reveal>` once; body text never animates. Nothing loops, so no pause control is needed.
 - Ease: `cubic-bezier(0.16, 1, 0.3, 1)`. Everything honours `prefers-reduced-motion`.
 
 ## Accessibility

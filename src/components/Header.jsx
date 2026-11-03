@@ -4,9 +4,9 @@ import { ArrowRight } from './Icons';
 
 const Header = () => (
   <header id="top" className="relative">
-    <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-10 md:px-8 md:pb-24 md:pt-16 lg:grid-cols-[1.1fr_0.9fr]">
+    <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-16 pt-8 md:px-8 md:pb-24 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
       <div>
-        <h1 className="font-display text-[clamp(2.6rem,5.4vw,4.6rem)] font-extrabold leading-[1] tracking-[-0.03em] text-ink">
+        <h1 className="font-display text-[clamp(2.6rem,5.2vw,4.4rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
           I build the interface, and wire up the systems behind it.
         </h1>
         <p className="mt-7 max-w-[34rem] text-xl leading-relaxed text-muted md:text-[1.375rem]">
@@ -30,20 +30,21 @@ const Header = () => (
         </div>
 
         <p className="mt-10 max-w-[34rem] text-[15px] leading-relaxed text-body">
-          <span className="font-semibold text-accent">Now at Wakandi:</span> shipping M-Pesa, SMS and AI integrations for Jamii Connect, with 190 commits in my first month.
+          <span className="font-semibold text-accent">Now, full-time at Wakandi:</span> building the M-Pesa, SMS and AI integrations behind Jamii Connect, a platform in production for Kenyan SACCOs and churches.
         </p>
 
-        <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[13px] text-faint">
+        <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-faint">
           <li className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-accent" aria-hidden="true" />
             Open to remote roles and freelance work
           </li>
-          <li>Thika, Kenya</li>
           <li>English · Kiswahili</li>
         </ul>
       </div>
 
-      <Avatar />
+      <div className="order-first lg:order-none">
+        <Avatar />
+      </div>
     </div>
   </header>
 );

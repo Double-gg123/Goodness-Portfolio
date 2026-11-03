@@ -6,10 +6,9 @@ import Experience from './components/Experience';
 import Services from './components/Services';
 import Stack from './components/Stack';
 import About from './components/About';
-import { ArrowUp, ArrowUpRight, ChatIcon, CheckIcon, CopyIcon, MailIcon } from './components/Icons';
+import { ArrowUp, ArrowUpRight, ChatIcon, CheckIcon, CopyIcon, MailIcon, NewTab } from './components/Icons';
 import { useScrollProgress } from './hooks';
-
-const EMAIL = 'gibendigoodness@gmail.com';
+import { EMAIL, WHATSAPP_URL } from './contact';
 
 const BackToTop = () => {
   const progress = useScrollProgress();
@@ -20,7 +19,7 @@ const BackToTop = () => {
       href="#top"
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
-      className={`fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full border border-line bg-card text-ink shadow-[0_8px_24px_rgba(0,0,0,0.25)] transition duration-300 ease-out hover:-translate-y-1 ${
+      className={`fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full bg-card text-ink shadow-[0_4px_12px_rgba(0,0,0,0.3)] ring-1 ring-line transition duration-300 ease-out hover:-translate-y-1 ${
         visible ? 'opacity-100' : 'pointer-events-none translate-y-4 opacity-0'
       }`}
     >
@@ -31,26 +30,31 @@ const BackToTop = () => {
 
 /* Copies the email, for visitors without a mail app set up. */
 const CopyEmail = () => {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState('idle'); // idle | copied | failed
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2500);
+      setStatus('copied');
+      window.setTimeout(() => setStatus('idle'), 2500);
     } catch {
-      setCopied(false);
+      setStatus('failed');
     }
   };
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
-    >
-      {copied ? <CheckIcon className="h-5 w-5 text-accent" /> : <CopyIcon className="h-5 w-5" />}
-      <span aria-live="polite">{copied ? 'Email copied' : 'Copy email'}</span>
-    </button>
+    <div className="flex flex-col gap-2">
+      <button
+        type="button"
+        onClick={copy}
+        className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
+      >
+        {status === 'copied' ? <CheckIcon className="h-5 w-5 text-accent" /> : <CopyIcon className="h-5 w-5" />}
+        {status === 'copied' ? 'Email copied' : 'Copy email'}
+      </button>
+      <p aria-live="polite" className="m-0 text-sm text-muted">
+        {status === 'failed' && `Couldn't copy automatically. The address is ${EMAIL}.`}
+      </p>
+    </div>
   );
 };
 
@@ -95,7 +99,7 @@ const Portfolio = () => (
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
           Open to remote frontend roles and freelance projects. Email or WhatsApp, whichever suits you.
         </p>
-        <div className="mt-10 flex flex-wrap gap-3">
+        <div className="mt-10 flex flex-wrap items-start gap-3">
           <a
             href={`mailto:${EMAIL}?subject=Hello%20Goodness`}
             className="inline-flex min-h-[52px] items-center gap-2 rounded-full bg-accent px-6 font-semibold text-on-accent transition-transform duration-300 ease-out hover:-translate-y-0.5"
@@ -105,13 +109,14 @@ const Portfolio = () => (
           </a>
           <CopyEmail />
           <a
-            href="https://wa.me/254718175283"
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noreferrer"
             className="inline-flex min-h-[52px] items-center gap-2 rounded-full border border-line px-6 font-semibold text-ink transition-colors hover:border-ink"
           >
             <ChatIcon className="h-5 w-5" />
             WhatsApp
+            <NewTab />
           </a>
         </div>
       </section>
@@ -136,6 +141,7 @@ const Portfolio = () => (
               >
                 {label}
                 <ArrowUpRight className="h-4 w-4" />
+                <NewTab />
               </a>
             </li>
           ))}

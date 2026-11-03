@@ -1,14 +1,7 @@
 import React from 'react';
 
-const results = [
-  ['4×', 'organic traffic for a consulting platform (about 500 to 2,000 visitors a month)'],
-  ['10,000', 'email subscribers, grown with segmented Mailchimp automation'],
-  ['10 hours', 'saved each week by automating five business workflows with n8n'],
-  ['~200', 'Shopify orders a month after rebuilding the store and checkout'],
-];
-
 const education = [
-  ['Bachelor of Arts in Psychology', 'Mount Kenya University · Dec 2025', 'Focus on Human-Computer Interaction, user behavioural mapping, research methods and accessibility.'],
+  ['Bachelor of Arts in Psychology', 'Mount Kenya University · Dec 2025', 'Focus on Human-Computer Interaction, user behavioural mapping, research methods and accessibility. Studied while working full-time.'],
   ['Women Techsters Fellowship', 'Tech4Dev · Aug 2025 – Oct 2026', 'Frontend Development track.'],
 ];
 
@@ -26,8 +19,10 @@ const About = () => (
           Since 2022 I have built frontends, payment and messaging integrations, and automations for consulting platforms, impact-driven brands and Kenyan member organisations.
         </p>
       </div>
+    </div>
 
-      <h3 className="mt-12 font-display text-xl font-bold text-ink">Education</h3>
+    <div>
+      <h3 className="font-display text-xl font-bold text-ink">Education</h3>
       <ul className="mt-4">
         {education.map(([title, meta, note]) => (
           <li key={title} className="border-t border-line py-5">
@@ -37,18 +32,6 @@ const About = () => (
           </li>
         ))}
       </ul>
-    </div>
-
-    <div>
-      <h3 className="font-display text-xl font-bold text-ink">Results so far</h3>
-      <dl className="mt-4">
-        {results.map(([value, label]) => (
-          <div key={value} className="grid grid-cols-[7.5rem_1fr] items-baseline gap-6 border-t border-line py-5">
-            <dt className="font-display text-3xl font-extrabold tracking-tight text-accent">{value}</dt>
-            <dd className="m-0 leading-relaxed text-body">{label}</dd>
-          </div>
-        ))}
-      </dl>
     </div>
   </section>
 );
