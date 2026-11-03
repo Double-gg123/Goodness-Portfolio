@@ -55,12 +55,12 @@ test('tool labels around the portrait show where each tool was used, and Escape 
 
 test('links to a collapsed case study open the list instead of going nowhere', () => {
   render(<App />);
-  expect(document.getElementById('case-lumen-ra')).toBeNull();
+  expect(document.getElementById('case-digital-chama')).toBeNull();
   const link = document.createElement('a');
-  link.href = '#case-lumen-ra';
+  link.href = '#case-digital-chama';
   document.body.appendChild(link);
   fireEvent.click(link);
-  expect(document.getElementById('case-lumen-ra')).not.toBeNull();
+  expect(document.getElementById('case-digital-chama')).not.toBeNull();
 });
 
 test('each case study explains the people side of the build', () => {
@@ -70,5 +70,6 @@ test('each case study explains the people side of the build', () => {
 
 test('flow diagrams can be replayed', () => {
   render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: /show 3 more projects/i }));
   expect(screen.getAllByRole('button', { name: /replay/i }).length).toBeGreaterThan(0);
 });

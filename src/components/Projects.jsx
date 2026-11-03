@@ -2,31 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Reveal, prefersReducedMotion } from '../hooks';
 import { ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
 
-// Case studies, strongest first. Live sites show a screenshot; private work shows how the system flows.
+// Case studies. Live sites (scrollable screenshots) come first, then private work shown as system flows.
 // `outcome: false` labels the last row "Shipped" when there is no measured result yet.
 // `why` is the people-side reasoning behind the build (the psychology/HCI angle).
 const projects = [
-  {
-    name: 'Jamii Connect',
-    role: 'Growth Hacker (frontend & integrations) at Wakandi, in a team of 10+',
-    problem: 'Kenyan SACCOs and churches need to reach their members reliably, by SMS, email and WhatsApp, in the language members read.',
-    built: 'The integrations behind a production platform: SMS sign-in codes and delivery reports, M-Pesa top-ups, email and WhatsApp, plus an English-to-Kiswahili message translator built on the Claude API that falls back safely to English.',
-    why: 'Members already trust M-Pesa’s own payment prompt, so top-ups use STK Push instead of asking people to type in a paybill number. Messages go out in Kiswahili so members read them in their first language, and fall back to English rather than not arriving at all.',
-    result: 'In production. 190 commits in my first month, plus a referral programme, lifecycle emails and the ChurchPay giving product, with unit tests running in CI.',
-    stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M-Pesa Daraja · Onfon · Brevo',
-    flow: {
-      label: 'A member tops up their account',
-      steps: [
-        ['Member taps “Top up”', 'Next.js'],
-        ['Payment prompt on their phone', 'M-Pesa STK Push', true],
-        ['Balance updated securely', 'Supabase'],
-      ],
-      branch: [
-        ['Receipt sent', 'SMS · WhatsApp · email'],
-        ['Written in Kiswahili', 'Claude API', true],
-      ],
-    },
-  },
   {
     name: 'The Career Whisperer',
     role: 'Lead developer and frontend administrator',
@@ -51,6 +30,52 @@ const projects = [
     url: 'https://briwnetawards.com/',
     shot: 'briwnet-awards.webp',
     shotH: 2400,
+  },
+  {
+    name: 'Amare’s Big Planet',
+    role: 'Co-developer, frontend and accessibility',
+    problem: 'An educational platform for young learners had to work for children and the adults guiding them.',
+    built: 'Child-centered design with WCAG accessibility, semantic HTML5 and CSS Grid layouts.',
+    why: 'It is designed for two people at once: a child who explores by tapping big, bright choices, and the parent or teacher beside them who needs to find the right video quickly.',
+    result: 'Growth driven through SEO and paid ad campaigns.',
+    stack: 'React · Semantic HTML5 · CSS Grid · WCAG',
+    url: 'https://amaresbigplanet.com/',
+    shot: 'amares-big-planet.webp',
+    shotH: 1290,
+  },
+  {
+    name: 'Lumen-ra',
+    role: 'Systems architect and core developer',
+    problem: 'An educational platform had to keep confidential user data safe.',
+    built: 'Modular interface features, API integrations and server-side authentication.',
+    why: 'People come to it around sensitive, personal experiences, so they need to trust that only the right people can see what they share.',
+    result: 'Role-based authorization protects confidential user data.',
+    outcome: false,
+    stack: 'React · Vite · API integrations · Auth',
+    url: 'https://lumen-ra.vercel.app/',
+    shot: 'lumen-ra.webp',
+    shotH: 2400,
+  },
+  {
+    name: 'Jamii Connect',
+    role: 'Growth Hacker (frontend & integrations) at Wakandi, in a team of 10+',
+    problem: 'Kenyan SACCOs and churches need to reach their members reliably, by SMS, email and WhatsApp, in the language members read.',
+    built: 'The integrations behind a production platform: SMS sign-in codes and delivery reports, M-Pesa top-ups, email and WhatsApp, plus an English-to-Kiswahili message translator built on the Claude API that falls back safely to English.',
+    why: 'Members already trust M-Pesa’s own payment prompt, so top-ups use STK Push instead of asking people to type in a paybill number. Messages go out in Kiswahili so members read them in their first language, and fall back to English rather than not arriving at all.',
+    result: 'In production. 190 commits in my first month, plus a referral programme, lifecycle emails and the ChurchPay giving product, with unit tests running in CI.',
+    stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M-Pesa Daraja · Onfon · Brevo',
+    flow: {
+      label: 'A member tops up their account',
+      steps: [
+        ['Member taps “Top up”', 'Next.js'],
+        ['Payment prompt on their phone', 'M-Pesa STK Push', true],
+        ['Balance updated securely', 'Supabase'],
+      ],
+      branch: [
+        ['Receipt sent', 'SMS · WhatsApp · email'],
+        ['Written in Kiswahili', 'Claude API', true],
+      ],
+    },
   },
   {
     name: 'Digital Chama',
@@ -90,31 +115,6 @@ const projects = [
         ['Sent', 'Gmail · form-filling'],
       ],
     },
-  },
-  {
-    name: 'Amare’s Big Planet',
-    role: 'Co-developer, frontend and accessibility',
-    problem: 'An educational platform for young learners had to work for children and the adults guiding them.',
-    built: 'Child-centered design with WCAG accessibility, semantic HTML5 and CSS Grid layouts.',
-    why: 'It is designed for two people at once: a child who explores by tapping big, bright choices, and the parent or teacher beside them who needs to find the right video quickly.',
-    result: 'Growth driven through SEO and paid ad campaigns.',
-    stack: 'React · Semantic HTML5 · CSS Grid · WCAG',
-    url: 'https://amaresbigplanet.com/',
-    shot: 'amares-big-planet.webp',
-    shotH: 1290,
-  },
-  {
-    name: 'Lumen-ra',
-    role: 'Systems architect and core developer',
-    problem: 'An educational platform had to keep confidential user data safe.',
-    built: 'Modular interface features, API integrations and server-side authentication.',
-    why: 'People come to it around sensitive, personal experiences, so they need to trust that only the right people can see what they share.',
-    result: 'Role-based authorization protects confidential user data.',
-    outcome: false,
-    stack: 'React · Vite · API integrations · Auth',
-    url: 'https://lumen-ra.vercel.app/',
-    shot: 'lumen-ra.webp',
-    shotH: 2400,
   },
 ];
 
