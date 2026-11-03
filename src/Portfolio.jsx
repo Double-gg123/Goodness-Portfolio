@@ -102,7 +102,7 @@ const Portfolio = () => (
             href="https://www.linkedin.com/in/goodness-gibendi/"
             target="_blank"
             rel="noreferrer"
-            className="font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+            className="-my-[11px] inline-block py-[11px] font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
           >
             LinkedIn
             <NewTab />

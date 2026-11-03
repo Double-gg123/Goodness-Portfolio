@@ -39,7 +39,7 @@ Direction A, "Systems diagram": a dark, technical page where the person is shown
 ## Motion
 
 - The hero wiring draws in once on load. Tool labels around the portrait are buttons: hover, focus or tap lights their wire and fills the panel under the portrait with links to the case studies that use that tool (never covers her face; Escape closes it).
-- Flow diagrams play step by step once when first seen, and again only from Replay (about 2 s, never loops). Steps not yet reached sit at 80% opacity; accent marks the current step and completed signature steps.
+- Flow diagrams play step by step once when first seen, and again only from Replay (about 2 s, never loops). Steps not yet reached get a dashed border (text stays full contrast); accent marks the current step and completed signature steps.
 - The results strip counts up once. Live-site screenshots scroll through the page on hover or keyboard focus.
 - Cards and images use `<Reveal>` once; body text never animates. Nothing loops, so no pause control is needed.
 - Ease: `cubic-bezier(0.16, 1, 0.3, 1)`. Everything honours `prefers-reduced-motion`.

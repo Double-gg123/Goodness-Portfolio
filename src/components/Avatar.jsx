@@ -167,7 +167,12 @@ const Avatar = () => {
                 aria-expanded={isActive}
                 aria-controls="tool-projects"
                 onMouseEnter={() => setHover(n.label)}
-                onClick={() => setPinned((p) => (p === n.label ? null : n.label))}
+                onClick={() => {
+                  if (active === n.label) {
+                    setPinned(null);
+                    setHover(null);
+                  } else setPinned(n.label);
+                }}
                 onFocus={() => setHover(n.label)}
                 className={`relative flex h-full w-full items-center justify-center whitespace-nowrap rounded-full border font-mono text-[12px] transition-colors duration-200 before:absolute before:-inset-x-1.5 before:-inset-y-3 before:content-[''] sm:text-sm lg:text-[15px] ${
                   isActive
@@ -183,11 +188,12 @@ const Avatar = () => {
       </div>
 
       {/* One panel under the portrait: a hint by default, or the projects for the selected tool. Never covers her face. */}
-      <div id="tool-projects" aria-live="polite" className="mx-auto mt-2 max-w-sm sm:min-h-[5.75rem]">
+      {/* Fixed height on larger screens so the page never jumps; on phones the card floats over the content below. */}
+      <div id="tool-projects" aria-live="polite" className="relative mx-auto mt-2 h-7 max-w-sm sm:h-[8.75rem]">
         {activeNode ? (
-          <div className="rounded-xl border border-line bg-card p-3">
+          <div className="absolute inset-x-0 top-0 z-30 rounded-xl border border-line bg-card p-3 shadow-[0_12px_32px_rgba(0,0,0,0.35)] sm:static sm:shadow-none">
             <p className="m-0 px-2 pb-1 text-xs font-semibold text-faint">Where I used {activeNode.label}</p>
-            <ul className="m-0 flex list-none flex-wrap gap-x-2 p-0">
+            <ul className="m-0 flex list-none flex-col p-0">
               {activeNode.used.map(([name, id]) => (
                 <li key={id}>
                   <a
@@ -208,14 +214,13 @@ const Avatar = () => {
         ) : (
           <p className="m-0 pt-2 text-center text-sm text-faint">
             <span className="[@media(hover:hover)]:hidden">Tap</span>
-            <span className="hidden [@media(hover:hover)]:inline">Point at</span> a tool to see where I used it
+            <span className="hidden [@media(hover:hover)]:inline">Hover over</span> a tool to see where I used it
           </p>
         )}
       </div>
 
       <figcaption className="mt-1 text-center">
-        <span className="hidden font-display text-xl font-bold tracking-tight text-ink sm:block">Goodness Gibendi</span>
-        <span className="mt-0.5 block text-sm text-faint">Frontend developer · Thika, Kenya</span>
+        <span className="block text-sm text-faint">Frontend developer · Thika, Kenya · English &amp; Kiswahili</span>
         <span className="sr-only">Shown wired to the tools she connects: React, Next.js, M-Pesa, SMS, the Claude API and n8n.</span>
       </figcaption>
     </figure>

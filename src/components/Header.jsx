@@ -32,10 +32,6 @@ const Header = () => (
         <p className="mt-10 max-w-[34rem] text-[15px] leading-relaxed text-body">
           <span className="font-semibold text-accent">Now, full-time at Wakandi:</span> building the M-Pesa, SMS and AI integrations behind Jamii Connect, a platform in production for Kenyan SACCOs and churches.
         </p>
-
-        <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-faint">
-          <li>English · Kiswahili</li>
-        </ul>
       </div>
 
       <div className="order-first lg:order-none">

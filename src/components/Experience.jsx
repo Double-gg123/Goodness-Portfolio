@@ -14,7 +14,7 @@ const experiences = [
       'Delivered growth features: a referral programme, lifecycle emails and the ChurchPay giving product.',
     ],
     caseStudy: { id: 'case-jamii-connect', label: 'Jamii Connect case study' },
-    stack: 'Next.js · Supabase · Claude API · M-Pesa Daraja',
+    stack: 'Next.js · Supabase · Claude API · M‑Pesa Daraja',
   },
   {
     company: 'JOAT Kenya',

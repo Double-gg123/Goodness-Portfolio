@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Reveal, prefersReducedMotion } from '../hooks';
-import { ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
+import { ArrowRight, ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
 
 // Case studies. Live sites (scrollable screenshots) come first, then private work shown as system flows.
 // `outcome: false` labels the last row "Shipped" when there is no measured result yet.
 // `why` is the people-side reasoning behind the build (the psychology/HCI angle).
+// `compact: true` merges Problem and What I built into one row for the shorter case studies.
 const projects = [
   {
     name: 'The Career Whisperer',
@@ -28,16 +29,19 @@ const projects = [
     outcome: false,
     stack: 'React · Next.js · PHP · Laravel · MySQL',
     url: 'https://briwnetawards.com/',
+    shotNote: 'Now running as Aurevia Africa Honours.',
     shot: 'briwnet-awards.webp',
     shotH: 2400,
   },
   {
     name: 'Amare’s Big Planet',
+    compact: true,
     role: 'Co-developer, frontend and accessibility',
     problem: 'An educational platform for young learners had to work for children and the adults guiding them.',
     built: 'Child-centered design with WCAG accessibility, semantic HTML5 and CSS Grid layouts.',
     why: 'It is designed for two people at once: a child who explores by tapping big, bright choices, and the parent or teacher beside them who needs to find the right video quickly.',
-    result: 'Growth driven through SEO and paid ad campaigns.',
+    result: 'SEO and paid ad campaigns to grow its audience.',
+    outcome: false,
     stack: 'React · Semantic HTML5 · CSS Grid · WCAG',
     url: 'https://amaresbigplanet.com/',
     shot: 'amares-big-planet.webp',
@@ -45,11 +49,12 @@ const projects = [
   },
   {
     name: 'Lumen-ra',
+    compact: true,
     role: 'Systems architect and core developer',
     problem: 'An educational platform had to keep confidential user data safe.',
     built: 'Modular interface features, API integrations and server-side authentication.',
     why: 'People come to it around sensitive, personal experiences, so they need to trust that only the right people can see what they share.',
-    result: 'Role-based authorization protects confidential user data.',
+    result: 'A live platform where each role sees only the data it needs.',
     outcome: false,
     stack: 'React · Vite · API integrations · Auth',
     url: 'https://lumen-ra.vercel.app/',
@@ -63,12 +68,12 @@ const projects = [
     built: 'The integrations behind a production platform: SMS sign-in codes and delivery reports, M-Pesa top-ups, email and WhatsApp, plus an English-to-Kiswahili message translator built on the Claude API that falls back safely to English.',
     why: 'Members already trust M-Pesa’s own payment prompt, so top-ups use STK Push instead of asking people to type in a paybill number. Messages go out in Kiswahili so members read them in their first language, and fall back to English rather than not arriving at all.',
     result: 'In production. 190 commits in my first month, plus a referral programme, lifecycle emails and the ChurchPay giving product, with unit tests running in CI.',
-    stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M-Pesa Daraja · Onfon · Brevo',
+    stack: 'Next.js · Supabase · PostgreSQL · Claude API · Zod · M‑Pesa Daraja · Onfon · Brevo',
     flow: {
       label: 'A member tops up their account',
       steps: [
         ['Member taps “Top up”', 'Next.js'],
-        ['Payment prompt on their phone', 'M-Pesa STK Push', true],
+        ['Payment prompt on their phone', 'M‑Pesa STK Push', true],
         ['Balance updated securely', 'Supabase'],
       ],
       branch: [
@@ -92,7 +97,7 @@ const projects = [
         ['Member requests a loan', 'React'],
         ['Signatories approve', 'Multi-signatory rules', true],
         ['ID and sanctions checks', 'Screening API, with fallback'],
-        ['Money sent to their phone', 'M-Pesa STK Push', true],
+        ['Money sent to their phone', 'M‑Pesa STK Push', true],
         ['Audit trail and PDF report', 'Express + SQLite'],
       ],
     },
@@ -121,7 +126,7 @@ const projects = [
 const FEATURED = 4;
 
 // Measured results, shown once at the top of the work. Numbers count up the first time they appear.
-const RESULTS_SOURCE = { label: 'The Career Whisperer · 2022–26', href: '#case-the-career-whisperer' };
+const RESULTS_SOURCE = { label: 'The Career Whisperer, 2022–26', href: '#case-the-career-whisperer' };
 const results = [
   { value: 4, suffix: '×', label: 'organic traffic for a consulting platform' },
   { value: 10, suffix: ' hrs', label: 'saved every week by automating 5 workflows' },
@@ -222,7 +227,7 @@ const stateOf = (i, lit) => (i < lit ? 'done' : i === lit ? 'active' : 'pending'
 const stepClass = (state, hot) => {
   const border = state === 'active' || (hot && state === 'done') ? 'border-accent' : 'border-line';
   const glow = state === 'active' ? 'bg-accent/10 shadow-[0_0_0_4px_rgb(var(--accent)/0.18)]' : 'bg-paper';
-  const fade = state === 'pending' ? 'opacity-80' : 'opacity-100';
+  const fade = state === 'pending' ? 'border-dashed' : '';
   return `${border} ${glow} ${fade} transition-[opacity,background-color,box-shadow,border-color] duration-300 ease-out`;
 };
 
@@ -235,7 +240,7 @@ const Node = ({ text, system, hot, state }) => (
 
 // The wire into a step lights up once the signal has reached that step.
 const Wire = ({ on }) => (
-  <div className={`ml-6 h-4 w-px transition-colors duration-300 ${on ? 'bg-accent' : 'bg-faint/60'}`} aria-hidden="true" />
+  <div className={`ml-6 h-4 w-px transition-colors duration-300 ${on ? 'bg-accent' : 'bg-faint'}`} aria-hidden="true" />
 );
 
 /* How a private project's system works, drawn as a vertical flow that can play through. */
@@ -269,9 +274,9 @@ const Flow = ({ flow }) => {
         {flow.branch && (
           <li>
             <div className="ml-6 flex h-4 w-[calc(50%+0.25rem)] items-end" aria-hidden="true">
-              <div className={`h-full w-px transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint/60'}`} />
-              <div className={`h-px flex-1 transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint/60'}`} />
-              <div className={`h-full w-px transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint/60'}`} />
+              <div className={`h-full w-px transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint'}`} />
+              <div className={`h-px flex-1 transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint'}`} />
+              <div className={`h-full w-px transition-colors duration-300 ${branchOn ? 'bg-accent' : 'bg-faint'}`} />
             </div>
             <p className="sr-only">Then, at the same time:</p>
             <div className="grid grid-cols-2 gap-3">
@@ -315,6 +320,7 @@ const Shot = ({ project }) => {
         />
         <span className="sr-only">{project.name} live site (opens in a new tab)</span>
       </a>
+      {project.shotNote && <p className="m-0 mt-2 text-sm text-muted">{project.shotNote}</p>}
       <p className="mt-2 hidden text-sm text-faint motion-safe:[@media(hover:hover)]:block">Hover to scroll through the site</p>
     </div>
   );
@@ -345,20 +351,28 @@ const CaseStudy = ({ project, headingRef }) => (
     className="grid gap-6 border-t border-line py-14 first:border-t-0 first:pt-4 lg:grid-cols-[1fr_1.05fr] lg:gap-x-14 lg:gap-y-0"
   >
     <header className="lg:col-start-2 lg:row-start-1">
-      <h3 ref={headingRef} tabIndex={-1} className="font-display text-3xl font-extrabold tracking-tight text-ink outline-none md:text-4xl">
+      <h3 ref={headingRef} tabIndex={-1} className="rounded-md font-display text-3xl font-extrabold tracking-tight text-ink focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-accent md:text-4xl">
         {project.name}
       </h3>
       <p className="mt-2 text-muted">{project.role}</p>
     </header>
 
-    <Reveal className="lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:pt-2">
+    <Reveal className="lg:sticky lg:top-24 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-start lg:pt-2">
       {project.flow ? <Flow flow={project.flow} /> : <Shot project={project} />}
     </Reveal>
 
     <div className="lg:col-start-2">
       <dl className="mt-0 lg:mt-6">
-        <Row label="Problem">{project.problem}</Row>
-        <Row label="What I built">{project.built}</Row>
+        {project.compact ? (
+          <Row label="The work">
+            {project.problem} {project.built}
+          </Row>
+        ) : (
+          <>
+            <Row label="Problem">{project.problem}</Row>
+            <Row label="What I built">{project.built}</Row>
+          </>
+        )}
         {project.why && <Row label="Why it works">{project.why}</Row>}
         <Row label={project.outcome === false ? 'Shipped' : 'Result'}>
           <ResultText text={project.result} />
@@ -380,6 +394,44 @@ const CaseStudy = ({ project, headingRef }) => (
     </div>
   </article>
 );
+
+/* While the list is collapsed: a short index of the private systems still hidden, so the M-Pesa and AI
+   proof is visible without reordering. Each row links to its case study, which opens the list. */
+const PrivateSystems = ({ items }) => {
+  const systems = items.filter((p) => p.flow);
+  if (!systems.length) return null;
+  return (
+    <section aria-labelledby="private-systems-title" className="mt-4 border-t border-line pt-10">
+      <h3 id="private-systems-title" className="font-display text-2xl font-extrabold tracking-tight text-ink">
+        Private systems
+      </h3>
+      <p className="mt-2 max-w-xl text-muted">Built for clients and teams, so shown as how the system works rather than a screenshot.</p>
+      <ul className="m-0 mt-6 list-none p-0">
+        {systems.map((p) => {
+          const signature = [...p.flow.steps, ...(p.flow.branch || [])].filter((s) => s[2]).map((s) => s[1]);
+          return (
+            <li key={p.name} className="border-t border-line first:border-t-0">
+              <a
+                href={`#${slug(p.name)}`}
+                className="group grid gap-1 py-5 transition-colors hover:bg-paper/40 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] sm:items-center sm:gap-6"
+              >
+                <span className="font-display text-xl font-bold text-ink transition-colors group-hover:text-accent">{p.name}</span>
+                <span className="text-body">
+                  {p.flow.label}
+                  <span className="mt-1 block font-mono text-[13px] text-accent">{signature.join(' · ')}</span>
+                </span>
+                <span className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-muted transition-colors group-hover:text-ink">
+                  Read the case study
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+};
 
 const Projects = () => {
   const [showAll, setShowAll] = useState(false);
@@ -449,8 +501,8 @@ const Projects = () => {
         ))}
       </dl>
       <p className="mt-3 text-sm text-faint">
-        All four from{' '}
-        <a href={RESULTS_SOURCE.href} className="font-semibold text-muted underline decoration-line underline-offset-4 transition-colors hover:text-ink">
+        At{' '}
+        <a href={RESULTS_SOURCE.href} className="-my-[13px] inline-block py-[13px] font-semibold text-muted underline decoration-line underline-offset-4 transition-colors hover:text-ink">
           {RESULTS_SOURCE.label}
         </a>
       </p>
@@ -460,6 +512,8 @@ const Projects = () => {
           <CaseStudy key={project.name} project={project} headingRef={i === FEATURED ? firstNewRef : undefined} />
         ))}
       </div>
+
+      {!showAll && <PrivateSystems items={projects.slice(FEATURED)} />}
 
       <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-line pt-8">
         <button

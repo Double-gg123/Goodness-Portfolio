@@ -5,16 +5,17 @@ test('hero has a clear headline and names Goodness beside her portrait', () => {
   render(<App />);
   expect(screen.getByRole('heading', { level: 1, name: /i build the interface/i })).toBeInTheDocument();
   expect(screen.getByRole('img', { name: /illustration of goodness gibendi/i })).toBeInTheDocument();
-  expect(screen.getByText('Frontend developer · Thika, Kenya')).toBeInTheDocument();
+  expect(screen.getByText(/Frontend developer · Thika, Kenya · English & Kiswahili/)).toBeInTheDocument();
 });
 
 test('case studies come first, with results and problem / build / outcome rows', () => {
   render(<App />);
   const work = screen.getByRole('region', { name: /case studies/i });
   expect(within(work).getAllByText('4×').length).toBeGreaterThan(0);
-  expect(within(work).getAllByText('Problem').length).toBe(4);
-  expect(within(work).getAllByText('Result').length).toBe(2);
-  expect(within(work).getAllByText('Shipped').length).toBe(2);
+  expect(within(work).getAllByText('Problem').length).toBe(2);
+  expect(within(work).getAllByText('The work').length).toBe(2);
+  expect(within(work).getAllByText('Result').length).toBe(1);
+  expect(within(work).getAllByText('Shipped').length).toBe(3);
 });
 
 test('more projects are revealed on request', () => {
@@ -23,7 +24,7 @@ test('more projects are revealed on request', () => {
   expect(button).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(button);
   expect(screen.getByRole('button', { name: /show fewer projects/i })).toHaveAttribute('aria-expanded', 'true');
-  expect(screen.getAllByText('Problem').length).toBe(7);
+  expect(screen.getAllByText('Problem').length).toBe(5);
 });
 
 test('every role says what type of role it is', () => {
@@ -72,4 +73,14 @@ test('flow diagrams can be replayed', () => {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: /show 3 more projects/i }));
   expect(screen.getAllByRole('button', { name: /replay/i }).length).toBeGreaterThan(0);
+});
+
+test('hidden private systems are listed while the projects are collapsed', () => {
+  render(<App />);
+  const list = screen.getByRole('region', { name: /private systems/i });
+  const jamii = within(list).getByRole('link', { name: /jamii connect/i });
+  expect(jamii).toHaveAttribute('href', '#case-jamii-connect');
+  fireEvent.click(jamii);
+  expect(document.getElementById('case-jamii-connect')).not.toBeNull();
+  expect(screen.queryByRole('region', { name: /private systems/i })).toBeNull();
 });
