@@ -107,6 +107,16 @@ const Portfolio = () => (
             LinkedIn
             <NewTab />
           </a>
+          , and my code is on{' '}
+          <a
+            href="https://github.com/Double-gg123"
+            target="_blank"
+            rel="noreferrer"
+            className="-my-[11px] inline-block py-[11px] font-semibold text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:decoration-accent"
+          >
+            GitHub
+            <NewTab />
+          </a>
           .
         </p>
         <div className="mt-10 flex flex-wrap items-start gap-3">

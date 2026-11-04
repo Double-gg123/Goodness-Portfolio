@@ -11,16 +11,17 @@ test('hero has a clear headline and names Goodness beside her portrait', () => {
 test('case studies come first, with results and problem / build / outcome rows', () => {
   render(<App />);
   const work = screen.getByRole('region', { name: /case studies/i });
+  expect(within(work).getByRole('heading', { level: 3, name: /jamii connect/i })).toBeInTheDocument();
   expect(within(work).getAllByText('4×').length).toBeGreaterThan(0);
-  expect(within(work).getAllByText('Problem').length).toBe(2);
+  expect(within(work).getAllByText('Problem').length).toBe(3);
   expect(within(work).getAllByText('The work').length).toBe(2);
-  expect(within(work).getAllByText('Result').length).toBe(1);
+  expect(within(work).getAllByText('Result').length).toBe(2);
   expect(within(work).getAllByText('Shipped').length).toBe(3);
 });
 
 test('more projects are revealed on request', () => {
   render(<App />);
-  const button = screen.getByRole('button', { name: /show 3 more projects/i });
+  const button = screen.getByRole('button', { name: /show 2 more projects/i });
   expect(button).toHaveAttribute('aria-expanded', 'false');
   fireEvent.click(button);
   expect(screen.getByRole('button', { name: /show fewer projects/i })).toHaveAttribute('aria-expanded', 'true');
@@ -66,21 +67,21 @@ test('links to a collapsed case study open the list instead of going nowhere', (
 
 test('each case study explains the people side of the build', () => {
   render(<App />);
-  expect(screen.getAllByText('Why it works').length).toBe(4);
+  expect(screen.getAllByText('Why it works').length).toBe(5);
 });
 
 test('flow diagrams can be replayed', () => {
   render(<App />);
-  fireEvent.click(screen.getByRole('button', { name: /show 3 more projects/i }));
+  fireEvent.click(screen.getByRole('button', { name: /show 2 more projects/i }));
   expect(screen.getAllByRole('button', { name: /replay/i }).length).toBeGreaterThan(0);
 });
 
-test('hidden private systems are listed while the projects are collapsed', () => {
+test('hidden projects are listed while the projects are collapsed', () => {
   render(<App />);
-  const list = screen.getByRole('region', { name: /private systems/i });
-  const jamii = within(list).getByRole('link', { name: /jamii connect/i });
-  expect(jamii).toHaveAttribute('href', '#case-jamii-connect');
-  fireEvent.click(jamii);
-  expect(document.getElementById('case-jamii-connect')).not.toBeNull();
-  expect(screen.queryByRole('region', { name: /private systems/i })).toBeNull();
+  const list = screen.getByRole('region', { name: /more projects/i });
+  const chama = within(list).getByRole('link', { name: /digital chama/i });
+  expect(chama).toHaveAttribute('href', '#case-digital-chama');
+  fireEvent.click(chama);
+  expect(document.getElementById('case-digital-chama')).not.toBeNull();
+  expect(screen.queryByRole('region', { name: /more projects/i })).toBeNull();
 });

@@ -166,14 +166,14 @@ const Avatar = () => {
                 aria-label={`${n.label}: show projects that use it`}
                 aria-expanded={isActive}
                 aria-controls="tool-projects"
-                onMouseEnter={() => setHover(n.label)}
+                // Mouse hover and keyboard focus preview a tool; a click or tap toggles it. Touch fires
+                // neither preview, so the first tap opens the card instead of closing a preview.
+                onPointerEnter={(e) => e.pointerType === 'mouse' && setHover(n.label)}
+                onFocus={(e) => e.currentTarget.matches(':focus-visible') && setHover(n.label)}
                 onClick={() => {
-                  if (active === n.label) {
-                    setPinned(null);
-                    setHover(null);
-                  } else setPinned(n.label);
+                  setHover(null);
+                  setPinned((p) => (p === n.label ? null : n.label));
                 }}
-                onFocus={() => setHover(n.label)}
                 className={`relative flex h-full w-full items-center justify-center whitespace-nowrap rounded-full border font-mono text-[12px] transition-colors duration-200 before:absolute before:-inset-x-1.5 before:-inset-y-3 before:content-[''] sm:text-sm lg:text-[15px] ${
                   isActive
                     ? 'border-accent bg-accent text-on-accent'
@@ -188,10 +188,10 @@ const Avatar = () => {
       </div>
 
       {/* One panel under the portrait: a hint by default, or the projects for the selected tool. Never covers her face. */}
-      {/* Fixed height on larger screens so the page never jumps; on phones the card floats over the content below. */}
-      <div id="tool-projects" aria-live="polite" className="relative mx-auto mt-2 h-7 max-w-sm sm:h-[8.75rem]">
+      {/* Only the hint's height is reserved; the card floats over the caption and space below, so nothing jumps. */}
+      <div id="tool-projects" aria-live="polite" className="relative mx-auto mt-2 h-7 max-w-sm">
         {activeNode ? (
-          <div className="absolute inset-x-0 top-0 z-30 rounded-xl border border-line bg-card p-3 shadow-[0_12px_32px_rgba(0,0,0,0.35)] sm:static sm:shadow-none">
+          <div className="absolute inset-x-0 top-0 z-30 rounded-xl border border-line bg-card p-3 shadow-[0_12px_32px_rgba(0,0,0,0.35)]">
             <p className="m-0 px-2 pb-1 text-xs font-semibold text-faint">Where I used {activeNode.label}</p>
             <ul className="m-0 flex list-none flex-col p-0">
               {activeNode.used.map(([name, id]) => (

@@ -123,7 +123,7 @@ const projects = [
   },
 ];
 
-const FEATURED = 4;
+const FEATURED = 5; // the four live sites, plus Jamii Connect (current full-time work)
 
 // Measured results, shown once at the top of the work. Numbers count up the first time they appear.
 const RESULTS_SOURCE = { label: 'The Career Whisperer, 2022–26', href: '#case-the-career-whisperer' };
@@ -225,7 +225,8 @@ const useFlowPlayback = (stages) => {
 const stateOf = (i, lit) => (i < lit ? 'done' : i === lit ? 'active' : 'pending');
 
 const stepClass = (state, hot) => {
-  const border = state === 'active' || (hot && state === 'done') ? 'border-accent' : 'border-line';
+  // Done steps get a solid, visible border; steps not reached yet stay faint and dashed.
+  const border = state === 'active' || (hot && state === 'done') ? 'border-accent' : state === 'done' ? 'border-faint' : 'border-line';
   const glow = state === 'active' ? 'bg-accent/10 shadow-[0_0_0_4px_rgb(var(--accent)/0.18)]' : 'bg-paper';
   const fade = state === 'pending' ? 'border-dashed' : '';
   return `${border} ${glow} ${fade} transition-[opacity,background-color,box-shadow,border-color] duration-300 ease-out`;
@@ -316,12 +317,15 @@ const Shot = ({ project }) => {
           loading="lazy"
           decoding="async"
           style={style}
-          className="absolute left-0 top-0 h-auto w-full ease-in-out dark:brightness-[0.88] motion-safe:transition-transform motion-safe:group-hover:[transform:translateY(var(--shift))] motion-safe:group-focus-visible:[transform:translateY(var(--shift))]"
+          className="absolute left-0 top-0 h-auto w-full ease-in-out motion-safe:transition-transform motion-safe:group-hover:[transform:translateY(var(--shift))] motion-safe:group-focus-visible:[transform:translateY(var(--shift))]"
         />
         <span className="sr-only">{project.name} live site (opens in a new tab)</span>
       </a>
       {project.shotNote && <p className="m-0 mt-2 text-sm text-muted">{project.shotNote}</p>}
-      <p className="mt-2 hidden text-sm text-faint motion-safe:[@media(hover:hover)]:block">Hover to scroll through the site</p>
+      {/* The hint only under the first screenshot; the others work the same way. */}
+      {project === projects.find((p) => p.shot) && (
+        <p className="mt-2 hidden text-sm text-faint motion-safe:[@media(hover:hover)]:block">Hover to scroll through the site</p>
+      )}
     </div>
   );
 };
@@ -351,7 +355,7 @@ const CaseStudy = ({ project, headingRef }) => (
     className="grid gap-6 border-t border-line py-14 first:border-t-0 first:pt-4 lg:grid-cols-[1fr_1.05fr] lg:gap-x-14 lg:gap-y-0"
   >
     <header className="lg:col-start-2 lg:row-start-1">
-      <h3 ref={headingRef} tabIndex={-1} className="rounded-md font-display text-3xl font-extrabold tracking-tight text-ink focus:outline focus:outline-2 focus:outline-offset-4 focus:outline-accent md:text-4xl">
+      <h3 ref={headingRef} tabIndex={-1} className="rounded-md font-display text-3xl font-extrabold tracking-tight text-ink focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent md:text-4xl">
         {project.name}
       </h3>
       <p className="mt-2 text-muted">{project.role}</p>
@@ -403,7 +407,7 @@ const PrivateSystems = ({ items }) => {
   return (
     <section aria-labelledby="private-systems-title" className="mt-4 border-t border-line pt-10">
       <h3 id="private-systems-title" className="font-display text-2xl font-extrabold tracking-tight text-ink">
-        Private systems
+        More projects
       </h3>
       <p className="mt-2 max-w-xl text-muted">Built for clients and teams, so shown as how the system works rather than a screenshot.</p>
       <ul className="m-0 mt-6 list-none p-0">
