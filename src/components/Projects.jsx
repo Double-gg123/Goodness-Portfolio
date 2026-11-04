@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Reveal, prefersReducedMotion } from '../hooks';
-import { ArrowRight, ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
+import { ArrowUpRight, MinusIcon, NewTab, PlusIcon, ReplayIcon } from './Icons';
 
 // Case studies. Live sites (scrollable screenshots) come first, then private work shown as system flows.
 // `outcome: false` labels the last row "Shipped" when there is no measured result yet.
@@ -399,44 +399,6 @@ const CaseStudy = ({ project, headingRef }) => (
   </article>
 );
 
-/* While the list is collapsed: a short index of the private systems still hidden, so the M-Pesa and AI
-   proof is visible without reordering. Each row links to its case study, which opens the list. */
-const PrivateSystems = ({ items }) => {
-  const systems = items.filter((p) => p.flow);
-  if (!systems.length) return null;
-  return (
-    <section aria-labelledby="private-systems-title" className="mt-4 border-t border-line pt-10">
-      <h3 id="private-systems-title" className="font-display text-2xl font-extrabold tracking-tight text-ink">
-        More projects
-      </h3>
-      <p className="mt-2 max-w-xl text-muted">Built for clients and teams, so shown as how the system works rather than a screenshot.</p>
-      <ul className="m-0 mt-6 list-none p-0">
-        {systems.map((p) => {
-          const signature = [...p.flow.steps, ...(p.flow.branch || [])].filter((s) => s[2]).map((s) => s[1]);
-          return (
-            <li key={p.name} className="border-t border-line first:border-t-0">
-              <a
-                href={`#${slug(p.name)}`}
-                className="group grid gap-1 py-5 transition-colors hover:bg-paper/40 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] sm:items-center sm:gap-6"
-              >
-                <span className="font-display text-xl font-bold text-ink transition-colors group-hover:text-accent">{p.name}</span>
-                <span className="text-body">
-                  {p.flow.label}
-                  <span className="mt-1 block font-mono text-[13px] text-accent">{signature.join(' · ')}</span>
-                </span>
-                <span className="inline-flex min-h-[44px] items-center gap-2 text-sm font-semibold text-muted transition-colors group-hover:text-ink">
-                  Read the case study
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:translate-x-1" />
-                </span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  );
-};
-
 const Projects = () => {
   const [showAll, setShowAll] = useState(false);
   const firstNewRef = useRef(null);
@@ -516,8 +478,6 @@ const Projects = () => {
           <CaseStudy key={project.name} project={project} headingRef={i === FEATURED ? firstNewRef : undefined} />
         ))}
       </div>
-
-      {!showAll && <PrivateSystems items={projects.slice(FEATURED)} />}
 
       <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-line pt-8">
         <button

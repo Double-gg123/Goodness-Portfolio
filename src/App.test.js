@@ -76,12 +76,10 @@ test('flow diagrams can be replayed', () => {
   expect(screen.getAllByRole('button', { name: /replay/i }).length).toBeGreaterThan(0);
 });
 
-test('hidden projects are listed while the projects are collapsed', () => {
+test('hidden projects open from the Show more button only', () => {
   render(<App />);
-  const list = screen.getByRole('region', { name: /more projects/i });
-  const chama = within(list).getByRole('link', { name: /digital chama/i });
-  expect(chama).toHaveAttribute('href', '#case-digital-chama');
-  fireEvent.click(chama);
-  expect(document.getElementById('case-digital-chama')).not.toBeNull();
   expect(screen.queryByRole('region', { name: /more projects/i })).toBeNull();
+  expect(document.getElementById('case-digital-chama')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: /show 2 more projects/i }));
+  expect(document.getElementById('case-digital-chama')).not.toBeNull();
 });

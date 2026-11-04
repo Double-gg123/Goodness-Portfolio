@@ -7,7 +7,8 @@ const Header = () => (
     <div className="mx-auto grid max-w-6xl items-center gap-6 px-5 pb-12 pt-4 md:gap-10 md:px-8 md:pb-16 md:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
       <div>
         <h1 className="font-display text-[clamp(2.25rem,5.2vw,4.4rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
-          <span className="mb-3 block text-[clamp(1.25rem,2vw,1.6rem)] font-bold tracking-tight text-accent md:mb-4">Goodness Gibendi</span>
+          {/* The name is already in the nav bar, so it is in the heading for search and screen readers only. */}
+          <span className="sr-only">Goodness Gibendi: </span>
           I build the interface, and wire up the systems behind it.
         </h1>
         <p className="mt-5 max-w-[34rem] text-lg leading-relaxed text-muted md:mt-7 md:text-[1.375rem]">
